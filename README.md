@@ -10,7 +10,7 @@ Copy your `enigma2` folder, your `tvheadend` folder or your `channels.conf` file
 
 On a default Ubuntu install, the following command `sudo apt-get install p7zip-full imagemagick pngnq librsvg2-bin binutils` should be sufficient, to get the required packages. Running the script on a Ubuntu Live system should be possible.
 
-The repository can be downloaded [here](https://bitbucket.org/picons/picons-source/downloads).
+The repository can be downloaded [here](https://github.com/picons/picons-source/archive/master.zip).
 
 GUIDELINES
 ==========
