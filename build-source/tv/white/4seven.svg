@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="200"
+   height="232.66521"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-935.89286,-235.63448)"
+     id="layer1">
+    <path
+       d="m 981.80514,442.67766 6.04328,0.0882 -0.74935,23.72661 -6.48408,0 z"
+       inkscape:connector-curvature="0"
+       id="path3020"
+       style="fill:#ffffff;stroke:none" />
+    <path
+       d="m 1013.1788,467.37402 -7.0526,0 2.1158,-75.72809 -18.5133,2.20397 0,9.60926 -53.33584,-8.55137 72.11364,-11.0198 0.4407,-22.56855 -51.74895,10.13821 -15.51589,-3.1737 18.51327,-4.05528 27.94622,-46.81213 1.32238,-30.94361 5.11319,3.26187 -2.9974,67.79382 17.71978,-3.70265 2.5566,-107.72959 5.9464,3.89219 -0.4806,16.38425 18.3371,-30.23834 55.716,39.05418 -2.9974,4.76055 4.4962,3.52634 2.821,73.61228 -6.9645,7.93426 -10.5793,-17.36721 -35.8802,6.96451 0,24.41989 36.4973,-5.90619 8.1991,-4.67282 32.5304,9.69743 -4.0024,5.64213 -27.9109,6.87636 -46.9885,77.05046 -6.4356,-0.35263 1.9395,-222.51185 -18.954,32.17781 z"
+       inkscape:connector-curvature="0"
+       id="path3022"
+       style="fill:#ffffff;stroke:none" />
+    <path
+       d="m 1064.0551,468.29968 30.4851,-0.24684 40.8527,-76.15125 0,-20.9817 -57.2416,-23.26501 0.6171,25.47821 33.8531,11.3632 z"
+       inkscape:connector-curvature="0"
+       id="path3024"
+       style="fill:#3d91b5;fill-opacity:1;stroke:none" />
+  </g>
+</svg>
