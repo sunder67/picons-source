@@ -156,12 +156,13 @@ for background in "$SOURCEDIR/backgrounds/"*.build ; do
             chmod -R 777 "$TEMPPICONS"
             "$TOOLSDIR"/ipkg-build.sh -o root -g root "$TEMPPICONS" "$TEMPBINARIES" >> "$LOGFILE"
 
-            echo "$(date +"%H:%M:%S") - Creating tar.bz2: $backgroundname.$backgroundcolorname"
-            mkdir "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
-            cp -P -r "$TEMPPICONS/picon/"* "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$LOGFILE"
-            chmod -R 777 "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
-            tar --owner=root --group=root -cjf "$TEMPBINARIES/$backgroundname.$backgroundcolorname"\_"$version.tar.bz2" -C "$TEMPPICONS" "$backgroundname.$backgroundcolorname"\_"$version"
-            rm -rf "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
+            #DISABLED
+            #echo "$(date +"%H:%M:%S") - Creating tar.bz2: $backgroundname.$backgroundcolorname"
+            #mkdir "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
+            #cp -P -r "$TEMPPICONS/picon/"* "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$LOGFILE"
+            #chmod -R 777 "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
+            #tar --owner=root --group=root -cjf "$TEMPBINARIES/$backgroundname.$backgroundcolorname"\_"$version.tar.bz2" -C "$TEMPPICONS" "$backgroundname.$backgroundcolorname"\_"$version"
+            #rm -rf "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
 
             echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
             mkdir "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
@@ -183,11 +184,12 @@ for background in "$SOURCEDIR/backgrounds/"*.build ; do
             tar --owner=root --group=root -cjf "$TEMPBINARIES/$backgroundname.$backgroundcolorname"\_"$version.tar.bz2" -C "$TEMPPICONS" "$backgroundname.$backgroundcolorname"\_"$version"
             rm -rf "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
 
-            echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
-            mkdir "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
-            cp -H "$TEMPPICONS/picon/1_"*.png "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$LOGFILE"
-            chmod -R 777 "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
-            7z a -t7z -mx9 "$TEMPBINARIES/$backgroundname.$backgroundcolorname"\_"$version.7z" "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version" >> "$LOGFILE"
+            #DISABLED
+            #echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
+            #mkdir "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
+            #cp -H "$TEMPPICONS/picon/1_"*.png "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$LOGFILE"
+            #chmod -R 777 "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version"
+            #7z a -t7z -mx9 "$TEMPBINARIES/$backgroundname.$backgroundcolorname"\_"$version.7z" "$TEMPPICONS/$backgroundname.$backgroundcolorname"\_"$version" >> "$LOGFILE"
 
         fi
 
