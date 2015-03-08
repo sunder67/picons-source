@@ -5,7 +5,7 @@ ISSUES
 
 When submitting an issue, make sure you follow these rules:
 
-- New entries to `srindex`, copy/paste them here as inline code blocks ([help](https://guides.github.com/features/mastering-markdown)) or if they are really big, use [pastebin](http://pastebin.com)
+- New entries to `srindex`, copy/paste them here as inline code blocks ([help](https://guides.github.com/features/mastering-markdown)) or if they are really big, use a [gist](https://gist.github.com/)
 - New logos can be put in an archive, correctly named (see below) and share the link here
 
 NAMING
