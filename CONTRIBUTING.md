@@ -5,8 +5,8 @@ ISSUES
 
 When submitting an issue, make sure you follow these rules:
 
-- New entries to `srindex`, copy/paste them here as inline code blocks ([help](https://guides.github.com/features/mastering-markdown)) or if they are really big, use a [gist](https://gist.github.com/)
-- New logos can be put in an archive, correctly named (see below) and share the link here
+- Entries to `srindex`, put them inside code blocks by using backticks ([help](https://guides.github.com/features/mastering-markdown)) or if they are really big, use a [gist](https://gist.github.com/).
+- Logos should be inside an archive, correctly named (see below). Share the link.
 
 NAMING
 ======
@@ -14,20 +14,20 @@ NAMING
 __Serviceref:__
 
 - UPPERCASE
-- Only the part `296_5_85_C00000` is used, the parts `1_0_1_` and `_0_0_0` must be removed
+- Only the part `296_5_85_C00000` is used, the parts `1_0_1_` and `_0_0_0` must be removed.
 
 __Logo:__
 
 - LOWERCASE
-- NO spaces, fancy symbols or `.-+_`, except for the exceptions below
-- Time sharing channels are seperated by `_`
-- Sometimes it's useful to add a country code, do it by putting `-gbr`, `-deu` or `-...` at the end of the name. Country codes can be found [here](https://gist.github.com/picons/0db7c14917397962a734)
-- If the channelname contains a `+`, use `+`, if it's a timeshift channel, use `plus1`
-- Filetype `svg` is the way to go, otherwise `png`
-- The resolution doesn't matter for `svg`, for `png` try to get it > 400px
-- Quality should be as high as possible with transparancy
-- A `white` version of a logo, should be placed in the folder `./build-source/tv/white` or `./build-source/radio/white`, a `black` version must always exist, a `white` version is optional
-- Don't forget to put `tv/` or `radio/` in front of the logo's name in `./build-source/srindex`
+- NO spaces, fancy symbols or `.-+_`, except for the exceptions below.
+- Time sharing channels are seperated by `_`.
+- Sometimes it's useful to add a country code, do it by putting `-gbr`, `-deu` or `-...` at the end of the name. Country codes can be found [here](https://gist.github.com/picons/0db7c14917397962a734).
+- If the channelname contains a `+`, use `+`, if it's a timeshift channel, use `plus1`.
+- Filetype `svg` is the way to go, otherwise `png`.
+- The resolution doesn't matter for `svg`, for `png` try to get it > 400px.
+- Quality should be as high as possible with transparancy.
+- A `white` version of a logo, should be placed in the folder `./build-source/tv/white` or `./build-source/radio/white`, a `black` version must always exist, a `white` version is optional.
+- Don't forget to put `tv/` or `radio/` in front of the logo's name in `./build-source/srindex`.
 
 SAMPLE OF SRINDEX
 =================
