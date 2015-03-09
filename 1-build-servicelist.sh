@@ -40,7 +40,7 @@ if [ -d "$location/build-input/tvheadend" ]; then
         serviceref=$(cat $channelfile | grep -o '1_0_.*_.*_.*_.*_.*_0_0_0')
         unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0//p')
         logo=$(cat "$location/build-source/srindex" | grep -i -m 1 "$unique_id" | sed -n -e 's/.*=//p')
-        tvhservice=$(cat $channelfile | grep -A1 'services' | sed -n "2p" | sed -e 's/"//g')
+        tvhservice=$(cat $channelfile | grep -A1 'services' | sed -n "2p" | sed -e 's/"//g' -e 's/,//g')
         channelname=$(cat $(find "$location/build-input/tvheadend" -type f -name $tvhservice) | grep 'svcname' | sed -e 's/.*"svcname": "//g' -e 's/",//g' | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
         if [ -z "$logo" ]; then
             logo="--------"
