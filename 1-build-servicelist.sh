@@ -78,8 +78,8 @@ if [ -f "$location/build-input/channels.conf" ]; then
         case ${vdrchannel[3]} in
             *"W") namespace=$(printf "%x\n" $(echo "${vdrchannel[3]}" | sed -e 's/S//' -e 's/W//' | awk '{printf "%.0f\n", 3600-($1*10)}'));;
             *"E") namespace=$(printf "%x\n" $(echo "${vdrchannel[3]}" | sed -e 's/S//' -e 's/E//' | awk '{printf "%.0f\n", $1*10}'));;
-            "T") namespace="EEEE0000";;
-            "C") namespace="FFFF0000";;
+            "T") namespace="EEEE";;
+            "C") namespace="FFFF";;
         esac
         case ${vdrchannel[5]} in
             "0") channeltype="2";;
