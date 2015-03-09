@@ -18,6 +18,8 @@ if [ -d "$location/build-input/enigma2" ]; then
             logo="--------"
         fi
         echo -e "$serviceref\t$logo\t$channelname" >> "$tempfile"
+        currentline=$((currentline+1))
+        echo -ne "Channels found: $currentline"\\r
     done
 
     cat "$tempfile" | sort -t $'\t' -k 3,3 | uniq | column -t -s $'\t' > "$file"
@@ -44,6 +46,8 @@ if [ -d "$location/build-input/tvheadend" ]; then
             logo="--------"
         fi
         echo -e "$serviceref\t$logo\t$channelname" >> "$tempfile"
+        currentline=$((currentline+1))
+        echo -ne "Channels found: $currentline"\\r
     done
 
     cat "$tempfile" | sort -t $'\t' -k 3,3 | uniq | column -t -s $'\t' > "$file"
@@ -89,6 +93,8 @@ if [ -f "$location/build-input/channels.conf" ]; then
             logo="--------"
         fi
         echo -e '1_0_'"$channeltype"'_'"$unique_id"'0000_0_0_0'"\t$logo\t$channelname" >> "$tempfile"
+        currentline=$((currentline+1))
+        echo -ne "Channels found: $currentline"\\r
     done
 
     cat "$tempfile" | sort -t $'\t' -k 3,3 | uniq | column -t -s $'\t' > "$file"
