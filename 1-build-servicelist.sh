@@ -10,7 +10,7 @@ if [ -d "$location/build-input/enigma2" ]; then
     tempfile="/tmp/$(echo $RANDOM)"
 
     cat "$location/build-input/enigma2/"*bouquet.* | grep -o '1:0:.*:.*:.*:.*:.*:0:0:0' | sed -e 's/.*/\U&\E/' -e 's/:/_/g' | sort | uniq | while read serviceref ; do
-        unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0//p')
+        unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
         logo=$(cat "$location/build-source/srindex" | grep -i -m 1 "$unique_id" | sed -n -e 's/.*=//p')
         channelref=(${serviceref//_/ })
         channelname=$(cat "$location/build-input/enigma2/lamedb" | grep -i -A1 "${channelref[3]}:.*${channelref[6]}:.*${channelref[4]}:.*${channelref[5]}:.*:.*" | sed -n "2p" | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
@@ -38,7 +38,7 @@ if [ -d "$location/build-input/tvheadend" ]; then
 
     for channelfile in "$location/build-input/tvheadend/channel/config/"* ; do
         serviceref=$(cat $channelfile | grep -o '1_0_.*_.*_.*_.*_.*_0_0_0')
-        unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0//p')
+        unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
         logo=$(cat "$location/build-source/srindex" | grep -i -m 1 "$unique_id" | sed -n -e 's/.*=//p')
         tvhservice=$(cat $channelfile | grep -A1 'services' | sed -n "2p" | sed -e 's/"//g' -e 's/,//g')
         channelname=$(cat $(find "$location/build-input/tvheadend" -type f -name $tvhservice) | grep 'svcname' | sed -e 's/.*"svcname": "//g' -e 's/",//g' | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')

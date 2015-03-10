@@ -13,7 +13,7 @@ mkdir -p "$build_location/symlinks"
 cd "$build_location/symlinks"
 
 cat "$serviceref_list"* | grep -o '1_0_.*_.*_.*_.*_.*_0_0_0' | sort | uniq | while read serviceref ; do
-    unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0//p')
+    unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
     logo=$(cat "$source_location/srindex" | grep -i -m 1 "$unique_id" | sed -n -e 's/.*=//p')
 
     if [ ! -z "$logo" ]; then
