@@ -9,8 +9,8 @@ if [ -d "$location/build-input/enigma2" ]; then
     file="/tmp/servicelist_enigma2"
     tempfile="/tmp/$(echo $RANDOM)"
 
-    cat "$location/build-input/enigma2/"*bouquet.* | grep -o '1:0:.*:.*:.*:.*:.*:0:0:0' | sed -e 's/.*/\U&\E/' -e 's/:/_/g' | sort | uniq | while read serviceref ; do
-        unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
+    cat "$location/build-input/enigma2/"*bouquet.* | grep -o '#SERVICE .*:0:.*:.*:.*:.*:.*:0:0:0' | sed -e 's/#SERVICE //g' -e 's/.*/\U&\E/' -e 's/:/_/g' | sort | uniq | while read serviceref ; do
+        unique_id=$(echo "$serviceref" | sed -n -e 's/^[^_]*_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
         logo=$(cat "$location/build-source/srindex" | grep -i -m 1 "$unique_id" | sed -n -e 's/.*=//p')
         channelref=(${serviceref//_/ })
         channelname=$(cat "$location/build-input/enigma2/lamedb" | grep -i -A1 "${channelref[3]}:.*${channelref[6]}:.*${channelref[4]}:.*${channelref[5]}:.*:.*" | sed -n "2p" | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
