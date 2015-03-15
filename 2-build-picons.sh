@@ -40,25 +40,8 @@ echo "$(date +"%H:%M:%S") - Creating symlinks and copying logos"
 "$buildtools"/create-symlinks+copy-logos.sh "$HOME/servicelist_" "$temp/newbuildsource" "$buildsource"
 
 echo "$(date +"%H:%M:%S") - Converting svg files"
-mkdir -p "$temp/sourcepicons/black/tv"
-mkdir -p "$temp/sourcepicons/black/radio"
-mkdir -p "$temp/sourcepicons/white/tv"
-mkdir -p "$temp/sourcepicons/white/radio"
 
-cp "$temp/newbuildsource/logos/tv/"*.* "$temp/sourcepicons/black/tv" 2>> "$logfile"
-cp "$temp/newbuildsource/logos/radio/"*.* "$temp/sourcepicons/black/radio" 2>> "$logfile"
-
-for file in $(find "$temp/sourcepicons" -type f -name '*.svg'); do
-    rsvg-convert -w 400 -h 400 -a -f png -o ${file%.*}.png "$file"
-    rm "$file"
-done
-
-cp "$temp/sourcepicons/black/tv/"*.* "$temp/sourcepicons/white/tv" 2>> "$logfile"
-cp "$temp/sourcepicons/black/radio/"*.* "$temp/sourcepicons/white/radio" 2>> "$logfile"
-cp "$temp/newbuildsource/logos/tv/white/"*.* "$temp/sourcepicons/white/tv" 2>> "$logfile"
-cp "$temp/newbuildsource/logos/radio/white/"*.* "$temp/sourcepicons/white/radio" 2>> "$logfile"
-
-for file in $(find "$temp/sourcepicons" -type f -name '*.svg'); do
+for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
     rsvg-convert -w 400 -h 400 -a -f png -o ${file%.*}.png "$file"
     rm "$file"
 done
@@ -77,18 +60,12 @@ for background in "$buildsource/backgrounds/"*.build ; do
         echo "$(date +"%H:%M:%S") -----------------------------------------------------------"
         echo "$(date +"%H:%M:%S") - Creating picons: $backgroundname.$backgroundcolorname"
 
-        if [[ "$backgroundcolorname" == *-white* ]]; then
-            use_sourcepicons="$temp/sourcepicons/white"
-        else
-            use_sourcepicons="$temp/sourcepicons/black"
-        fi
-
         mkdir -p "$temp/finalpicons/picon"
 
-        for directory in "$use_sourcepicons/"* ; do
+        for directory in "$temp/newbuildsource/logos/"* ; do
             if [ -d "$directory" ]; then
                 directory=${directory##*/}
-                for logo in "$use_sourcepicons/$directory/"*.png ; do
+                for logo in "$temp/newbuildsource/logos/$directory/"*.png ; do
                     if [ -f "$logo" ]; then
                         logoname=${logo##*/}
                         logoname=${logoname%.*}
@@ -96,6 +73,12 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
                         if ! [ -d "$temp/finalpicons/picon/$directory" ]; then
                             mkdir -p "$temp/finalpicons/picon/$directory"
+                        fi
+
+                        if [[ "$backgroundcolorname" == *-white* ]]; then
+                            if [ -f "$temp/newbuildsource/logos/$directory/white/$logoname.png" ]; then
+                                logo="$temp/newbuildsource/logos/$directory/white/$logoname.png"
+                            fi
                         fi
 
                         case "$backgroundname" in
@@ -132,10 +115,10 @@ for background in "$buildsource/backgrounds/"*.build ; do
             fi
         done
 
-        if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
+        echo "$(date +"%H:%M:%S") - Copying symlinks: $backgroundname.$backgroundcolorname"
+        cp -P "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon" 2>> "$logfile"
 
-            echo "$(date +"%H:%M:%S") - Copying symlinks: $backgroundname.$backgroundcolorname"
-            cp -P "$temp/newbuildsource/symlinks/1_"* "$temp/finalpicons/picon" 2>> "$logfile"
+        if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
 
             echo "$(date +"%H:%M:%S") - Creating ipk: $backgroundname.$backgroundcolorname"
             mkdir "$temp/finalpicons/CONTROL"
@@ -163,16 +146,13 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
             echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
             mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            cp -H "$temp/finalpicons/picon/1_"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
+            cp -H "$temp/finalpicons/picon/"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
             7z a -t7z -mx9 "$binaries/$backgroundname.$backgroundcolorname"\_"$version.7z" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" >> "$logfile"
 
         fi
 
         if [ "$backgroundname" = "kodi" ]; then
-
-            echo "$(date +"%H:%M:%S") - Copying symlinks: $backgroundname.$backgroundcolorname"
-            cp -P "$temp/newbuildsource/symlinks/1_"* "$temp/finalpicons/picon" 2>> "$logfile"
 
             echo "$(date +"%H:%M:%S") - Creating tar.bz2: $backgroundname.$backgroundcolorname"
             mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
@@ -184,7 +164,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
             #DISABLED
             #echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
             #mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            #cp -H "$temp/finalpicons/picon/1_"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
+            #cp -H "$temp/finalpicons/picon/"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             #chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
             #7z a -t7z -mx9 "$binaries/$backgroundname.$backgroundcolorname"\_"$version.7z" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" >> "$logfile"
 
