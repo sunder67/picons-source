@@ -9,7 +9,12 @@ REPODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCEDIR="$REPODIR/build-source"
 TOOLSDIR="$REPODIR/build-tools"
 
-TEMP="/tmp/picons-tmp"
+if [ -d "/dev/shm" ]; then
+    TEMP="/dev/shm/picons-tmp"
+else
+    TEMP="/tmp/picons-tmp"
+fi
+
 TEMPBINARIES="/tmp/picons-binaries"
 TEMPPICONS="$TEMP/picons"
 TEMPSOURCEPICONS="$TEMP/sourcepicons"
