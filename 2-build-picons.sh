@@ -15,17 +15,15 @@ else
     TEMP="/tmp/picons-tmp"
 fi
 
-TEMPBINARIES="/tmp/picons-binaries"
+TEMPBINARIES="$HOME/picons-binaries"
 TEMPPICONS="$TEMP/picons"
 TEMPSOURCEPICONS="$TEMP/sourcepicons"
 TEMPSOURCEPICONSBLACK="$TEMPSOURCEPICONS/black"
 TEMPSOURCEPICONSWHITE="$TEMPSOURCEPICONS/white"
 TEMPSYMLINKS_LOGOS="$TEMP/symlinks_logos"
 
-SERVICELIST="/tmp/servicelist_"
-
-LOGFILE="/tmp/picons.log"
-echo "$version" > "$LOGFILE"
+SERVICELIST="$HOME/servicelist_"
+LOGFILE="$TEMP/picons.log"
 
 chmod -R 755 "$TOOLSDIR"/*.sh
 
@@ -43,6 +41,8 @@ else
     rm -rf "$TEMPBINARIES"
     mkdir "$TEMPBINARIES"
 fi
+
+echo "$version" > "$LOGFILE"
 
 echo "$(date +"%H:%M:%S") - Creating symlinks and copying logos"
 "$TOOLSDIR"/create-symlinks+copy-logos.sh "$SERVICELIST" "$TEMPSYMLINKS_LOGOS" "$SOURCEDIR"
