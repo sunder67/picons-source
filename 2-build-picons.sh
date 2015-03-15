@@ -40,7 +40,6 @@ echo "$(date +"%H:%M:%S") - Creating symlinks and copying logos"
 "$buildtools"/create-symlinks+copy-logos.sh "$HOME/servicelist_" "$temp/newbuildsource" "$buildsource"
 
 echo "$(date +"%H:%M:%S") - Converting svg files"
-
 for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
     rsvg-convert -w 400 -h 400 -a -f png -o ${file%.*}.png "$file"
     rm "$file"
