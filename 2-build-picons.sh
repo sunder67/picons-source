@@ -136,11 +136,11 @@ for background in "$buildsource/backgrounds/"*.build ; do
             "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
 
             #DISABLED
-            #echo "$(date +"%H:%M:%S") - Creating tar.bz2: $backgroundname.$backgroundcolorname"
+            #echo "$(date +"%H:%M:%S") - Creating tar.xz: $backgroundname.$backgroundcolorname"
             #mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
             #cp -P -r "$temp/finalpicons/picon/"* "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             #chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            #tar --owner=root --group=root -cjf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.bz2" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
+            #tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
             #rm -rf "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
 
             echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
@@ -153,11 +153,11 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
         if [ "$backgroundname" = "kodi" ]; then
 
-            echo "$(date +"%H:%M:%S") - Creating tar.bz2: $backgroundname.$backgroundcolorname"
+            echo "$(date +"%H:%M:%S") - Creating tar.xz: $backgroundname.$backgroundcolorname"
             mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
             cp -P -r "$temp/finalpicons/picon/"* "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            tar --owner=root --group=root -cjf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.bz2" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
+            tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
             rm -rf "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
 
             #DISABLED
