@@ -135,19 +135,19 @@ for background in "$buildsource/backgrounds/"*.build ; do
             chmod -R 777 "$temp/finalpicons"
             "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
 
-            #DISABLED
-            #echo "$(date +"%H:%M:%S") - Creating tar.xz: $backgroundname.$backgroundcolorname"
-            #mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            #cp -P -r "$temp/finalpicons/picon/"* "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-            #chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            #tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
-            #rm -rf "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-
-            echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
+            echo "$(date +"%H:%M:%S") - Creating tar.xz: $backgroundname.$backgroundcolorname"
             mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            cp -H "$temp/finalpicons/picon/"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
+            cp -P -r "$temp/finalpicons/picon/"* "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            7z a -t7z -mx9 "$binaries/$backgroundname.$backgroundcolorname"\_"$version.7z" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" >> "$logfile"
+            XZ_OPT=-9e tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
+            rm -rf "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
+
+            #DISABLED
+            #echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
+            #mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
+            #cp -H "$temp/finalpicons/picon/"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
+            #chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
+            #7z a -t7z -mx9 "$binaries/$backgroundname.$backgroundcolorname"\_"$version.7z" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" >> "$logfile"
 
         fi
 
@@ -157,7 +157,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
             mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
             cp -P -r "$temp/finalpicons/picon/"* "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
+            XZ_OPT=-9e tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
             rm -rf "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
 
             #DISABLED
