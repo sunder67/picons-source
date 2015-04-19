@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#sudo apt-get install imagemagick pngnq librsvg2-bin
+#sudo apt-get install imagemagick pngnq librsvg2-bin binutils
 
 version="$(date +"%Y-%m-%d--%H-%M-%S")"
 timestamp=`echo ${version//-/} | rev | cut -c 3- | rev`.`echo ${version//-/} | cut -c 13-`
@@ -120,20 +120,22 @@ for background in "$buildsource/backgrounds/"*.build ; do
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
 
             echo "$(date +"%H:%M:%S") - Creating ipk: $backgroundname.$backgroundcolorname"
-            DEBIAN="$temp/finalpicons/DEBIAN"
-            mkdir "$DEBIAN"
-            echo "Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" > "$DEBIAN/control"
-            echo "Version: $version" >> "$DEBIAN/control"
-            echo "Section: base" >> "$DEBIAN/control"
-            echo "Architecture: all" >> "$DEBIAN/control"
-            echo "Maintainer: http://picons.github.io" >> "$DEBIAN/control"
-            echo "Source: https://github.com/picons/picons-source" >> "$DEBIAN/control"
-            echo "Description: $backgroundname Picons ($backgroundcolorname)" >> "$DEBIAN/control"
-            echo "OE: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" >> "$DEBIAN/control"
-            echo "HomePage: http://picons.github.io" >> "$DEBIAN/control"
-            echo "License: unknown" >> "$DEBIAN/control"
-            echo "Priority: optional" >> "$DEBIAN/control"
-            fakeroot -- dpkg-deb --deb-format=2.0 -Zgzip --build "$temp/finalpicons" "$binaries/enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk" &>> "$logfile"
+            #CONTROL="$temp/finalpicons/DEBIAN"
+            CONTROL="$temp/finalpicons/CONTROL"
+            mkdir "$CONTROL"
+            echo "Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" > "$CONTROL/control"
+            echo "Version: $version" >> "$CONTROL/control"
+            echo "Section: base" >> "$CONTROL/control"
+            echo "Architecture: all" >> "$CONTROL/control"
+            echo "Maintainer: http://picons.github.io" >> "$CONTROL/control"
+            echo "Source: https://github.com/picons/picons-source" >> "$CONTROL/control"
+            echo "Description: $backgroundname Picons ($backgroundcolorname)" >> "$CONTROL/control"
+            echo "OE: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" >> "$CONTROL/control"
+            echo "HomePage: http://picons.github.io" >> "$CONTROL/control"
+            echo "License: unknown" >> "$CONTROL/control"
+            echo "Priority: optional" >> "$CONTROL/control"
+            #fakeroot -- dpkg-deb --deb-format=2.0 -Zgzip --build "$temp/finalpicons" "$binaries/enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk" &>> "$logfile"
+            "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
 
         fi
 
