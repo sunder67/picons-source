@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#sudo apt-get install imagemagick pngnq librsvg2-bin binutils
+#sudo apt-get install imagemagick pngnq librsvg2-bin
 
 version="$(date +"%Y-%m-%d--%H-%M-%S")"
 timestamp=`echo ${version//-/} | rev | cut -c 3- | rev`.`echo ${version//-/} | cut -c 13-`
@@ -132,7 +132,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
             echo "HomePage: http://picons.github.io" >> "$temp/finalpicons/CONTROL/control"
             echo "License: unknown" >> "$temp/finalpicons/CONTROL/control"
             echo "Priority: optional" >> "$temp/finalpicons/CONTROL/control"
-            "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
+            "$buildtools"/ipkg-build.sh -c -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
 
         fi
 
