@@ -120,7 +120,6 @@ for background in "$buildsource/backgrounds/"*.build ; do
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
 
             echo "$(date +"%H:%M:%S") - Creating ipk package: $backgroundname.$backgroundcolorname"
-            #CONTROL="$temp/finalpicons/DEBIAN"
             CONTROL="$temp/finalpicons/CONTROL"
             mkdir "$CONTROL"
             echo "Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" > "$CONTROL/control"
@@ -134,19 +133,13 @@ for background in "$buildsource/backgrounds/"*.build ; do
             echo "HomePage: http://picons.github.io" >> "$CONTROL/control"
             echo "License: unknown" >> "$CONTROL/control"
             echo "Priority: optional" >> "$CONTROL/control"
-            #fakeroot -- dpkg-deb --deb-format=2.0 -Zgzip --build "$temp/finalpicons" "$binaries/enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk" &>> "$logfile"
             "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
 
         fi
 
         echo "$(date +"%H:%M:%S") - Creating tar archive: $backgroundname.$backgroundcolorname"
         mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-        #HARD LINK
         XZ_OPT=-9e tar --dereference --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" --exclude="tv" --exclude="radio"
-        #SYMBOLIC LINK
-        #XZ_OPT=-9e tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
-        #NO LINK
-        #XZ_OPT=-9e tar --hard-dereference --dereference --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" --exclude="tv" --exclude="radio"
 
         rm -rf "$temp/finalpicons"
 
