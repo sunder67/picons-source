@@ -120,19 +120,20 @@ for background in "$buildsource/backgrounds/"*.build ; do
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
 
             echo "$(date +"%H:%M:%S") - Creating ipk: $backgroundname.$backgroundcolorname"
-            mkdir "$temp/finalpicons/CONTROL"
-            echo "Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" > "$temp/finalpicons/CONTROL/control"
-            echo "Version: $version" >> "$temp/finalpicons/CONTROL/control"
-            echo "Section: base" >> "$temp/finalpicons/CONTROL/control"
-            echo "Architecture: all" >> "$temp/finalpicons/CONTROL/control"
-            echo "Maintainer: http://picons.github.io" >> "$temp/finalpicons/CONTROL/control"
-            echo "Source: https://github.com/picons/picons-source" >> "$temp/finalpicons/CONTROL/control"
-            echo "Description: $backgroundname Picons ($backgroundcolorname)" >> "$temp/finalpicons/CONTROL/control"
-            echo "OE: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" >> "$temp/finalpicons/CONTROL/control"
-            echo "HomePage: http://picons.github.io" >> "$temp/finalpicons/CONTROL/control"
-            echo "License: unknown" >> "$temp/finalpicons/CONTROL/control"
-            echo "Priority: optional" >> "$temp/finalpicons/CONTROL/control"
-            "$buildtools"/ipkg-build.sh -c -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
+            echo "2.0" > "$temp/finalpicons/debian-binary"
+            mkdir "$temp/finalpicons/DEBIAN"
+            echo "Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" > "$temp/finalpicons/DEBIAN/control"
+            echo "Version: $version" >> "$temp/finalpicons/DEBIAN/control"
+            echo "Section: base" >> "$temp/finalpicons/DEBIAN/control"
+            echo "Architecture: all" >> "$temp/finalpicons/DEBIAN/control"
+            echo "Maintainer: http://picons.github.io" >> "$temp/finalpicons/DEBIAN/control"
+            echo "Source: https://github.com/picons/picons-source" >> "$temp/finalpicons/DEBIAN/control"
+            echo "Description: $backgroundname Picons ($backgroundcolorname)" >> "$temp/finalpicons/DEBIAN/control"
+            echo "OE: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" >> "$temp/finalpicons/DEBIAN/control"
+            echo "HomePage: http://picons.github.io" >> "$temp/finalpicons/DEBIAN/control"
+            echo "License: unknown" >> "$temp/finalpicons/DEBIAN/control"
+            echo "Priority: optional" >> "$temp/finalpicons/DEBIAN/control"
+            fakeroot -- dpkg-deb -z9 -Zxz -Sextreme --build "$temp/finalpicons" "$binaries/enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname"\_"$version.ipk" &>> "$logfile"
 
         fi
 
