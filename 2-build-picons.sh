@@ -133,7 +133,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
             echo "HomePage: http://picons.github.io" >> "$CONTROL/control"
             echo "License: unknown" >> "$CONTROL/control"
             echo "Priority: optional" >> "$CONTROL/control"
-            "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
+            fakeroot -- "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
 
         fi
 
