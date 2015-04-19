@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#sudo apt-get install p7zip-full imagemagick pngnq librsvg2-bin binutils
+#sudo apt-get install imagemagick pngnq librsvg2-bin binutils
 
 version="$(date +"%Y-%m-%d--%H-%M-%S")"
 timestamp=`echo ${version//-/} | rev | cut -c 3- | rev`.`echo ${version//-/} | cut -c 13-`
@@ -115,7 +115,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
         done
 
         echo "$(date +"%H:%M:%S") - Copying symlinks: $backgroundname.$backgroundcolorname"
-        cp -P "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon" 2>> "$logfile"
+        cp --no-dereference "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon" 2>> "$logfile"
 
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
 
@@ -132,40 +132,21 @@ for background in "$buildsource/backgrounds/"*.build ; do
             echo "HomePage: http://picons.github.io" >> "$temp/finalpicons/CONTROL/control"
             echo "License: unknown" >> "$temp/finalpicons/CONTROL/control"
             echo "Priority: optional" >> "$temp/finalpicons/CONTROL/control"
-            chmod -R 777 "$temp/finalpicons"
             "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
 
-            #DISABLED
-            #echo "$(date +"%H:%M:%S") - Creating tar.xz: $backgroundname.$backgroundcolorname"
-            #mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            #cp -P -r "$temp/finalpicons/picon/"* "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-            #chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
+            echo "$(date +"%H:%M:%S") - Creating tar.xz: $backgroundname.$backgroundcolorname"
+            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
+            XZ_OPT=-9e tar --hard-dereference --dereference --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" --exclude="tv" --exclude="radio"
             #XZ_OPT=-9e tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
-            #rm -rf "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-
-            echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
-            mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            cp -H "$temp/finalpicons/picon/"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-            chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            7z a -t7z -mx9 "$binaries/$backgroundname.$backgroundcolorname"\_"$version.7z" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" >> "$logfile"
 
         fi
 
         if [ "$backgroundname" = "kodi" ]; then
 
             echo "$(date +"%H:%M:%S") - Creating tar.xz: $backgroundname.$backgroundcolorname"
-            mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            cp -P -r "$temp/finalpicons/picon/"* "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-            chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            XZ_OPT=-9e tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"
-            rm -rf "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-
-            #DISABLED
-            #echo "$(date +"%H:%M:%S") - Creating 7z: $backgroundname.$backgroundcolorname"
-            #mkdir "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            #cp -H "$temp/finalpicons/picon/"*.png "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-            #chmod -R 777 "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version"
-            #7z a -t7z -mx9 "$binaries/$backgroundname.$backgroundcolorname"\_"$version.7z" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" >> "$logfile"
+            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
+            #XZ_OPT=-9e tar --hard-dereference --dereference --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" --exclude="tv" --exclude="radio"
+            XZ_OPT=-9e tar --owner=root --group=root -cJf "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz" -C "$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version"            
 
         fi
 
