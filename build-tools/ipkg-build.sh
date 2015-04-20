@@ -232,6 +232,8 @@ rm $tmp_dir/tarX
 
 echo "2.0" > $tmp_dir/debian-binary
 
+find "$tmp_dir" -exec touch --reference="$pkg_dir/CONTROL/control" {} \;
+
 pkg_file=$dest_dir/${pkg}_${version}_${arch}.ipk
 rm -f $pkg_file
 if [ "$outer" = "ar" ] ; then
