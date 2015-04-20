@@ -137,7 +137,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
             echo "$(date +"%H:%M:%S") - Creating ipk package: $backgroundname.$backgroundcolorname"
             fakeroot -- "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
-            touch -t "$timestamp" "$binaries/$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk"
+            touch -t "$timestamp" "$binaries/enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk"
 
             echo "$(date +"%H:%M:%S") - Creating tar archive: $backgroundname.$backgroundcolorname"
             mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
