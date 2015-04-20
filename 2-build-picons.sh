@@ -137,16 +137,19 @@ for background in "$buildsource/backgrounds/"*.build ; do
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
             echo "$(date +"%H:%M:%S") - Creating ipk package: $backgroundname.$backgroundcolorname"
             fakeroot -- "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
+            touch -t "$timestamp" "$binaries/$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk"
 
             echo "$(date +"%H:%M:%S") - Creating tar archive: $backgroundname.$backgroundcolorname"
             mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             fakeroot -- tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
+            touch -t "$timestamp" "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
         fi
 
         if [ "$backgroundname" = "kodi" ]; then
             echo "$(date +"%H:%M:%S") - Creating tar archive: $backgroundname.$backgroundcolorname"
             mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             fakeroot -- tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
+            touch -t "$timestamp" "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
         fi
 
         rm -rf "$temp/finalpicons"
@@ -154,8 +157,6 @@ for background in "$buildsource/backgrounds/"*.build ; do
     done
 
 done
-
-find "$binaries" -exec touch -t "$timestamp" {} \;
 
 if [ -d "$temp" ]; then
     rm -rf "$temp"
