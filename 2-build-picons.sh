@@ -118,24 +118,22 @@ for background in "$buildsource/backgrounds/"*.build ; do
         echo "$(date +"%H:%M:%S") - Copying symlinks: $backgroundname.$backgroundcolorname"
         cp --no-dereference "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon" 2>> "$logfile"
 
-        echo "$(date +"%H:%M:%S") - Setting timestamp: $backgroundname.$backgroundcolorname"
-        CONTROL="$temp/finalpicons/CONTROL"
-        mkdir "$CONTROL"
-        echo "Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" > "$CONTROL/control"
-        echo "Version: $version" >> "$CONTROL/control"
-        echo "Section: base" >> "$CONTROL/control"
-        echo "Architecture: all" >> "$CONTROL/control"
-        echo "Maintainer: http://picons.github.io" >> "$CONTROL/control"
-        echo "Source: https://github.com/picons/picons-source" >> "$CONTROL/control"
-        echo "Description: $backgroundname Picons ($backgroundcolorname)" >> "$CONTROL/control"
-        echo "OE: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname" >> "$CONTROL/control"
-        echo "HomePage: http://picons.github.io" >> "$CONTROL/control"
-        echo "License: unknown" >> "$CONTROL/control"
-        echo "Priority: optional" >> "$CONTROL/control"
-        find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
-
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
             echo "$(date +"%H:%M:%S") - Creating ipk package: $backgroundname.$backgroundcolorname"
+            mkdir "$temp/finalpicons/CONTROL" ; cat > "$temp/finalpicons/CONTROL/control" <<-EOF
+				Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname
+				Version: $version
+				Section: base
+				Architecture: all
+				Maintainer: http://picons.github.io
+				Source: https://github.com/picons/picons-source
+				Description: $backgroundname Picons ($backgroundcolorname)
+				OE: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname
+				HomePage: http://picons.github.io
+				License: unknown
+				Priority: optional
+			EOF
+            find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
             fakeroot -- "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
             touch -t "$timestamp" "$binaries/enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk"
 
@@ -147,6 +145,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
         if [ "$backgroundname" = "kodi" ]; then
             echo "$(date +"%H:%M:%S") - Creating tar archive: $backgroundname.$backgroundcolorname"
+            find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
             mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
             fakeroot -- tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
             touch -t "$timestamp" "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
