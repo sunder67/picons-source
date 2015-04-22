@@ -3,7 +3,7 @@
 #sudo apt-get install imagemagick pngnq librsvg2-bin binutils
 
 version="$(date +'%Y-%m-%d--%H-%M-%S')"
-timestamp=`echo ${version//-/} | rev | cut -c 3- | rev`.`echo ${version//-/} | cut -c 13-`
+timestamp="$(echo ${version//-/} | rev | cut -c 3- | rev).$(echo ${version//-/} | cut -c 13-)"
 
 if [ -d "/dev/shm" ]; then
     temp="/dev/shm/picons-tmp"
