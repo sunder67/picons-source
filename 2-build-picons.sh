@@ -15,7 +15,6 @@ location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 buildsource="$location/build-source"
 buildtools="$location/build-tools"
 binaries="$HOME/picons-binaries"
-logfile="$temp/picons.log"
 
 if [ -d "$temp" ]; then rm -rf "$temp"; fi
 mkdir "$temp"
@@ -26,7 +25,6 @@ mkdir "$binaries"
 chmod -R 755 "$buildtools/"*.sh
 
 echo "$(date +'%H:%M:%S') - Version: $version"
-echo "$version" > "$logfile"
 
 echo "$(date +'%H:%M:%S') - Checking logos"
 "$buildtools/check-logos.sh" "$buildsource/tv"
@@ -99,7 +97,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
                                 ;;
                         esac
 
-                        convert "$backgroundcolor" \( "$logo" -background none -bordercolor none -border 100 -trim -resize $resize -gravity center -extent $extent +repage \) -layers merge - 2>> "$logfile" | $compress > "$temp/finalpicons/picon/$directory/$logoname.png" 2>> "$logfile"
+                        convert "$backgroundcolor" \( "$logo" -background none -bordercolor none -border 100 -trim -resize $resize -gravity center -extent $extent +repage \) -layers merge - 2>> /dev/null | $compress > "$temp/finalpicons/picon/$directory/$logoname.png"
 
                     fi
                 done
@@ -107,7 +105,9 @@ for background in "$buildsource/backgrounds/"*.build ; do
         done
 
         echo "$(date +'%H:%M:%S') - Creating binary packages: $backgroundname.$backgroundcolorname"
-        cp --no-dereference "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon" 2>> "$logfile"
+        cp --no-dereference "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon"
+
+        packagename="$backgroundname.${backgroundcolorname}_${version}"
 
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
             mkdir "$temp/finalpicons/CONTROL" ; cat > "$temp/finalpicons/CONTROL/control" <<-EOF
@@ -124,16 +124,16 @@ for background in "$buildsource/backgrounds/"*.build ; do
 				Priority: optional
 			EOF
             find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
-            fakeroot -- "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
+            fakeroot -- "$buildtools/ipkg-build.sh" -o root -g root "$temp/finalpicons" "$binaries" > /dev/null
 
-            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.${backgroundcolorname}_${version}" 2>> "$logfile"
-            fakeroot -- tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.${backgroundcolorname}_${version}" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.${backgroundcolorname}_${version}.tar.xz"
+            mv "$temp/finalpicons/picon" "$temp/finalpicons/$packagename"
+            fakeroot -- tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
         fi
 
         if [ "$backgroundname" = "kodi" ]; then
             find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
-            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.${backgroundcolorname}_${version}" 2>> "$logfile"
-            fakeroot -- tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.${backgroundcolorname}_${version}" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.${backgroundcolorname}_${version}.tar.xz"
+            mv "$temp/finalpicons/picon" "$temp/finalpicons/$packagename"
+            fakeroot -- tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
         fi
 
         find "$binaries" -exec touch -t "$timestamp" {} \;
@@ -143,8 +143,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
 done
 
-if [ -d "$temp" ]; then
-    rm -rf "$temp"
-fi
+if [ -d "$temp" ]; then rm -rf "$temp"; fi
 
+echo -e "\nThe binary packages are located in:\n$binaries\n"
 read -p "Press any key to exit..." -n1 -s
