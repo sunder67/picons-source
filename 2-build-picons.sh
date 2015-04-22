@@ -2,7 +2,7 @@
 
 #sudo apt-get install imagemagick pngnq librsvg2-bin binutils
 
-version="$(date +"%Y-%m-%d--%H-%M-%S")"
+version="$(date +'%Y-%m-%d--%H-%M-%S')"
 timestamp=`echo ${version//-/} | rev | cut -c 3- | rev`.`echo ${version//-/} | cut -c 13-`
 
 if [ -d "/dev/shm" ]; then
@@ -17,29 +17,25 @@ buildtools="$location/build-tools"
 binaries="$HOME/picons-binaries"
 logfile="$temp/picons.log"
 
-if [ -d "$temp" ]; then
-    rm -rf "$temp"
-fi
+if [ -d "$temp" ]; then rm -rf "$temp"; fi
 mkdir "$temp"
 
-if [ -d "$binaries" ]; then
-    rm -rf "$binaries"
-fi
+if [ -d "$binaries" ]; then rm -rf "$binaries"; fi
 mkdir "$binaries"
 
-chmod -R 755 "$buildtools"/*.sh
+chmod -R 755 "$buildtools/"*.sh
 
-echo "$(date +"%H:%M:%S") - Version: $version"
+echo "$(date +'%H:%M:%S') - Version: $version"
 echo "$version" > "$logfile"
 
-echo "$(date +"%H:%M:%S") - Checking logos"
-"$buildtools"/check-logos.sh "$buildsource/tv"
-"$buildtools"/check-logos.sh "$buildsource/radio"
+echo "$(date +'%H:%M:%S') - Checking logos"
+"$buildtools/check-logos.sh" "$buildsource/tv"
+"$buildtools/check-logos.sh" "$buildsource/radio"
 
-echo "$(date +"%H:%M:%S") - Creating symlinks and copying logos"
-"$buildtools"/create-symlinks+copy-logos.sh "$HOME/servicelist_" "$temp/newbuildsource" "$buildsource"
+echo "$(date +'%H:%M:%S') - Creating symlinks and copying logos"
+"$buildtools/create-symlinks+copy-logos.sh" "$HOME/servicelist_" "$temp/newbuildsource" "$buildsource"
 
-echo "$(date +"%H:%M:%S") - Converting svg files"
+echo "$(date +'%H:%M:%S') - Converting svg files"
 for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
     rsvg-convert -w 400 -h 400 -a -f png -o ${file%.*}.png "$file"
     rm "$file"
@@ -47,17 +43,14 @@ done
 
 for background in "$buildsource/backgrounds/"*.build ; do
 
-    backgroundname=${background%.*}
-    backgroundname=${backgroundname##*/}
+    backgroundname=$(basename ${background%.*})
 
     for backgroundcolor in "$buildsource/backgrounds/$backgroundname.build/"*.build ; do
 
-        backgroundcolorname=${backgroundcolor%.*}
-        backgroundcolorname=${backgroundcolorname%.*}
-        backgroundcolorname=${backgroundcolorname##*/}
+        backgroundcolorname=$(basename ${backgroundcolor%.*.*})
 
-        echo "$(date +"%H:%M:%S") -----------------------------------------------------------"
-        echo "$(date +"%H:%M:%S") - Creating picons: $backgroundname.$backgroundcolorname"
+        echo "$(date +'%H:%M:%S') -----------------------------------------------------------"
+        echo "$(date +'%H:%M:%S') - Creating picons: $backgroundname.$backgroundcolorname"
 
         mkdir -p "$temp/finalpicons/picon"
 
@@ -66,9 +59,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
                 directory=${directory##*/}
                 for logo in "$temp/newbuildsource/logos/$directory/"*.png ; do
                     if [ -f "$logo" ]; then
-                        logoname=${logo##*/}
-                        logoname=${logoname%.*}
-                        fullfilepath="$temp/finalpicons/picon/$directory/$logoname.png"
+                        logoname=$(basename ${logo%.*})
 
                         if ! [ -d "$temp/finalpicons/picon/$directory" ]; then
                             mkdir -p "$temp/finalpicons/picon/$directory"
@@ -108,49 +99,44 @@ for background in "$buildsource/backgrounds/"*.build ; do
                                 ;;
                         esac
 
-                        convert "$backgroundcolor" \( "$logo" -background none -bordercolor none -border 100 -trim -resize $resize -gravity center -extent $extent +repage \) -layers merge - 2>> "$logfile" | $compress > "$fullfilepath" 2>> "$logfile"
+                        convert "$backgroundcolor" \( "$logo" -background none -bordercolor none -border 100 -trim -resize $resize -gravity center -extent $extent +repage \) -layers merge - 2>> "$logfile" | $compress > "$temp/finalpicons/picon/$directory/$logoname.png" 2>> "$logfile"
 
                     fi
                 done
             fi
         done
 
-        echo "$(date +"%H:%M:%S") - Copying symlinks: $backgroundname.$backgroundcolorname"
+        echo "$(date +'%H:%M:%S') - Creating binary packages: $backgroundname.$backgroundcolorname"
         cp --no-dereference "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon" 2>> "$logfile"
 
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
-            echo "$(date +"%H:%M:%S") - Creating ipk package: $backgroundname.$backgroundcolorname"
             mkdir "$temp/finalpicons/CONTROL" ; cat > "$temp/finalpicons/CONTROL/control" <<-EOF
-				Package: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname
+				Package: enigma2-plugin-picons-$backgroundname.$backgroundcolorname
 				Version: $version
 				Section: base
 				Architecture: all
 				Maintainer: http://picons.github.io
 				Source: https://github.com/picons/picons-source
 				Description: $backgroundname Picons ($backgroundcolorname)
-				OE: enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname
+				OE: enigma2-plugin-picons-$backgroundname.$backgroundcolorname
 				HomePage: http://picons.github.io
 				License: unknown
 				Priority: optional
 			EOF
             find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
             fakeroot -- "$buildtools"/ipkg-build.sh -o root -g root "$temp/finalpicons" "$binaries" >> "$logfile"
-            touch -t "$timestamp" "$binaries/enigma2-plugin-picons-tv-$backgroundname.$backgroundcolorname"\_"$version"\_"all.ipk"
 
-            echo "$(date +"%H:%M:%S") - Creating tar archive: $backgroundname.$backgroundcolorname"
-            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-            fakeroot -- tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
-            touch -t "$timestamp" "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
+            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.${backgroundcolorname}_${version}" 2>> "$logfile"
+            fakeroot -- tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.${backgroundcolorname}_${version}" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.${backgroundcolorname}_${version}.tar.xz"
         fi
 
         if [ "$backgroundname" = "kodi" ]; then
-            echo "$(date +"%H:%M:%S") - Creating tar archive: $backgroundname.$backgroundcolorname"
             find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
-            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.$backgroundcolorname"\_"$version" 2>> "$logfile"
-            fakeroot -- tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.$backgroundcolorname"\_"$version" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
-            touch -t "$timestamp" "$binaries/$backgroundname.$backgroundcolorname"\_"$version.tar.xz"
+            mv "$temp/finalpicons/picon" "$temp/finalpicons/$backgroundname.${backgroundcolorname}_${version}" 2>> "$logfile"
+            fakeroot -- tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$backgroundname.${backgroundcolorname}_${version}" | xz -9 --extreme --memlimit=40% > "$binaries/$backgroundname.${backgroundcolorname}_${version}.tar.xz"
         fi
 
+        find "$binaries" -exec touch -t "$timestamp" {} \;
         rm -rf "$temp/finalpicons"
 
     done
