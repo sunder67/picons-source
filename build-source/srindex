@@ -1,3 +1,8 @@
+32F0_190_13E_820000=tv/canal+1-pol
+32FC_190_13E_820000=tv/canal+sport-pol
+1181_2AF8_13E_820000=tv/nc+
+379B_44C_13E_820000=tv/teletoon+hd-pol
+377D_44C_13E_820000=tv/teletoon+hd-pol
 32E2_190_13E_820000=tv/axnspinhd
 3DE5_640_13E_820000=tv/powertv-pol
 10F8_3E8_13E_820000=tv/polotv
@@ -2278,7 +2283,6 @@ D749_81B_2_11A0000=tv/clublandtv
 2980_3D54_13E_820000=tv/noortv
 2981_3D54_13E_820000=tv/orientnews
 2982_3D54_13E_820000=tv/tvdisco
-2989_3D54_13E_820000=tv/angeltv
 29_8C4_2210_EEEE0000=tv/nickelodeon
 29AE_3D54_13E_820000=tv/sntv
 29CD_3CF0_13E_820000=tv/pianeta
