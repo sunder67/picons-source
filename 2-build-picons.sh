@@ -114,7 +114,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
         packagename="$backgroundname.${backgroundcolorname}_${version}"
 
-        if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ]; then
+        if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ] || [ "$backgroundname" = "400x170" ]; then
             mkdir "$temp/finalpicons/CONTROL" ; cat > "$temp/finalpicons/CONTROL/control" <<-EOF
 				Package: enigma2-plugin-picons-$backgroundname.$backgroundcolorname
 				Version: $version
