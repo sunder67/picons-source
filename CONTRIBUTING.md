@@ -23,8 +23,9 @@ __Logo:__
 - Time sharing channels are seperated by `_`.
 - Sometimes it's useful to add a country code, do it by putting `-gbr`, `-deu` or `-...` at the end of the name. Country codes can be found [here](https://gist.github.com/picons/0db7c14917397962a734).
 - If the channelname contains a `+`, use `+`, if it's a timeshift channel, use `plus1`.
-- Filetype `svg` (CONVERT YOUR FONTS) is the way to go, otherwise `png`.
+- Filetype `svg` is the way to go, otherwise `png`.
 - The resolution doesn't matter for `svg`, for `png` try to get it > 400px.
+- When submitting `svg` files, make sure to convert `text` to `paths`.
 - Quality should be as high as possible with transparancy.
 - A `white` version of a logo, should be placed in the folder `./build-source/tv/white` or `./build-source/radio/white`, a `black` version must always exist, a `white` version is optional.
 - Don't forget to put `tv/` or `radio/` in front of the logo's name in `./build-source/srindex`.
