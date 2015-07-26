@@ -6,7 +6,7 @@ All the full resolution channel logos and their link to the actual channel (=ser
 BUILDING THE PICONS
 ===================
 
-[Ubuntu](http://www.ubuntu.com/download) and [Cygwin](https://cygwin.com/install.html) on Windows are tested and supported platforms for building the picons. The required packages needed, besides default installed ones, can be found at the top of the file `./2-build-picons.sh` or directly below.
+[Ubuntu](http://www.ubuntu.com/download) and [Cygwin on Windows](https://cygwin.com/install.html) are tested and supported platforms for building the picons. The required packages needed, besides the default installed ones, are shown below.
 
 ```
 Ubuntu packages: imagemagick pngquant binutils librsvg2-bin
