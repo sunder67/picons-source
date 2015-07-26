@@ -12,7 +12,7 @@ fi
 if [ -d "$location/build-input/enigma2" ]; then
     echo "Enigma2: Converting channellist..."
 
-    file="$HOME/servicelist_enigma2"
+    file="/tmp/servicelist_enigma2"
     tempfile="$temp/$(echo $RANDOM)"
 
     cat "$location/build-input/enigma2/"*bouquet.* | grep -o '#SERVICE .*:0:.*:.*:.*:.*:.*:0:0:0' | sed -e 's/#SERVICE //g' -e 's/.*/\U&\E/' -e 's/:/_/g' | sort | uniq | while read serviceref ; do
@@ -39,7 +39,7 @@ fi
 if [ -d "$location/build-input/tvheadend" ]; then
     echo "TvHeadend: Converting channellist..."
 
-    file="$HOME/servicelist_tvheadend"
+    file="/tmp/servicelist_tvheadend"
     tempfile="$temp/$(echo $RANDOM)"
 
     for channelfile in "$location/build-input/tvheadend/channel/config/"* ; do
@@ -67,7 +67,7 @@ fi
 if [ -f "$location/build-input/channels.conf" ]; then
     echo "VDR: Converting channellist..."
 
-    file="$HOME/servicelist_vdr"
+    file="/tmp/servicelist_vdr"
     tempfile="$temp/$(echo $RANDOM)"
 
     cat "$location/build-input/channels.conf" | grep -o '.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:0' | sort | uniq | while read channel ; do
