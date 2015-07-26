@@ -99,7 +99,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
                             "kodi")
                                 if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="256x256"; else resize="226x226"; fi
                                 extent="256x256"
-                                compress="cat"
+                                compress="pngquant -"
                                 ;;
                         esac
 
