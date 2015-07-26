@@ -15,7 +15,7 @@ fi
 location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 buildsource="$location/build-source"
 buildtools="$location/build-tools"
-binaries="/tmp/picons-binaries"
+binaries="$location/build-output/binaries"
 
 if [ -d "$temp" ]; then rm -rf "$temp"; fi
 mkdir "$temp"
@@ -32,7 +32,7 @@ echo "$(date +'%H:%M:%S') - Checking logos"
 "$buildtools/check-logos.sh" "$buildsource/radio"
 
 echo "$(date +'%H:%M:%S') - Creating symlinks and copying logos"
-"$buildtools/create-symlinks+copy-logos.sh" "/tmp/servicelist_" "$temp/newbuildsource" "$buildsource"
+"$buildtools/create-symlinks+copy-logos.sh" "$location/build-output/servicelist_" "$temp/newbuildsource" "$buildsource"
 
 echo "$(date +'%H:%M:%S') - Converting svg files"
 for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
