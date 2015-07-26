@@ -103,7 +103,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
                                 ;;
                         esac
 
-                        convert "$backgroundcolor" \( "$logo" -background none -bordercolor none -border 100 -trim -resize $resize -gravity center -extent $extent +repage \) -layers merge - 2>> /dev/null | $compress > "$temp/finalpicons/picon/$directory/$logoname.png"
+                        convert "$backgroundcolor" \( "$logo" -background none -bordercolor none -border 100 -trim -border 1% -resize $resize -gravity center -extent $extent +repage \) -layers merge - 2>> /dev/null | $compress > "$temp/finalpicons/picon/$directory/$logoname.png"
 
                     fi
                 done
