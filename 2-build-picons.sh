@@ -1,6 +1,7 @@
 #!/bin/bash
 
-#sudo apt-get install imagemagick pngnq librsvg2-bin binutils
+#Ubuntu packages: imagemagick pngquant binutils librsvg2-bin
+#Cygwin packages: imagemagick pngquant binutils rsvg
 
 version="$(date +'%Y-%m-%d--%H-%M-%S')"
 timestamp="$(echo ${version//-/} | rev | cut -c 3- | rev).$(echo ${version//-/} | cut -c 13-)"
@@ -14,7 +15,7 @@ fi
 location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 buildsource="$location/build-source"
 buildtools="$location/build-tools"
-binaries="$HOME/picons-binaries"
+binaries="/tmp/picons-binaries"
 
 if [ -d "$temp" ]; then rm -rf "$temp"; fi
 mkdir "$temp"
@@ -31,7 +32,7 @@ echo "$(date +'%H:%M:%S') - Checking logos"
 "$buildtools/check-logos.sh" "$buildsource/radio"
 
 echo "$(date +'%H:%M:%S') - Creating symlinks and copying logos"
-"$buildtools/create-symlinks+copy-logos.sh" "$HOME/servicelist_" "$temp/newbuildsource" "$buildsource"
+"$buildtools/create-symlinks+copy-logos.sh" "/tmp/servicelist_" "$temp/newbuildsource" "$buildsource"
 
 echo "$(date +'%H:%M:%S') - Converting svg files"
 for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
@@ -73,27 +74,27 @@ for background in "$buildsource/backgrounds/"*.build ; do
                             "70x53")
                                 if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="70x53"; else resize="62x45"; fi
                                 extent="70x53"
-                                compress="pngnq -g 2.2 -s 1"
+                                compress="pngquant -"
                                 ;;
                             "100x60")
                                 if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="100x60"; else resize="86x46"; fi
                                 extent="100x60"
-                                compress="pngnq -g 2.2 -s 1"
+                                compress="pngquant -"
                                 ;;
                             "220x132")
                                 if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="220x132"; else resize="189x101"; fi
                                 extent="220x132"
-                                compress="pngnq -g 2.2 -s 1"
+                                compress="pngquant -"
                                 ;;
                             "400x170")
                                 if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="400x170"; else resize="369x157"; fi
                                 extent="400x170"
-                                compress="pngnq -g 2.2 -s 1"
+                                compress="pngquant -"
                                 ;;
                             "400x240")
                                 if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="400x240"; else resize="369x221"; fi
                                 extent="400x240"
-                                compress="pngnq -g 2.2 -s 1"
+                                compress="pngquant -"
                                 ;;
                             "kodi")
                                 if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="256x256"; else resize="226x226"; fi
@@ -129,16 +130,16 @@ for background in "$buildsource/backgrounds/"*.build ; do
 				Priority: optional
 			EOF
             find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
-            fakeroot -- "$buildtools/ipkg-build.sh" -o root -g root "$temp/finalpicons" "$binaries" > /dev/null
+            "$buildtools/ipkg-build.sh" -o root -g root "$temp/finalpicons" "$binaries" > /dev/null
 
             mv "$temp/finalpicons/picon" "$temp/finalpicons/$packagename"
-            fakeroot -- tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
+            tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
         fi
 
         if [ "$backgroundname" = "kodi" ]; then
             find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
             mv "$temp/finalpicons/picon" "$temp/finalpicons/$packagename"
-            fakeroot -- tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
+            tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
         fi
 
         find "$binaries" -exec touch -t "$timestamp" {} \;
