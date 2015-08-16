@@ -40,6 +40,10 @@ chmod -R 755 "$buildtools/"*.sh
 
 echo "$(date +'%H:%M:%S') - Version: $version"
 
+echo "$(date +'%H:%M:%S') - Checking index"
+"$buildtools/check-index.sh" "$buildsource" "srp"
+"$buildtools/check-index.sh" "$buildsource" "snp"
+
 echo "$(date +'%H:%M:%S') - Checking logos"
 "$buildtools/check-logos.sh" "$buildsource/tv"
 "$buildtools/check-logos.sh" "$buildsource/radio"
