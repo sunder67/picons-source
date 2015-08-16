@@ -38,7 +38,7 @@ if [ -d "$location/build-input/enigma2" ]; then
         if [ -z "$snpname" ]; then
             snpname="--------"
         fi
-        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id=" | sed -n -e 's/.*=//p')
+        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id" | sed -n -e 's/.*=//p')
         if [ -z "$logo_srp" ]; then
             logo_srp="--------"
         fi
@@ -80,7 +80,7 @@ if [ -d "$location/build-input/tvheadend" ]; then
         if [ -z "$snpname" ]; then
             snpname="--------"
         fi
-        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id=" | sed -n -e 's/.*=//p')
+        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id" | sed -n -e 's/.*=//p')
         if [ -z "$logo_srp" ]; then
             logo_srp="--------"
         fi
@@ -140,7 +140,7 @@ if [ -f "$location/build-input/channels.conf" ]; then
         if [ -z "$snpname" ]; then
             snpname="--------"
         fi
-        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id=" | sed -n -e 's/.*=//p')
+        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id" | sed -n -e 's/.*=//p')
         if [ -z "$logo_srp" ]; then
             logo_srp="--------"
         fi
