@@ -45,5 +45,5 @@ Thumbs.db
 build-input/enigma2
 build-input/tvheadend
 build-input/channels.conf
-build-output/servicelist_*
+build-output/servicelist-*
 build-output/binaries

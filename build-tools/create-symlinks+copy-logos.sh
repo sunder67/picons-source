@@ -3,6 +3,7 @@
 serviceref_list="$1"
 build_location="$2"
 source_location="$3"
+style="$4"
 
 if [ -d "$build_location" ]; then
     rm -rf "$build_location"
@@ -12,22 +13,50 @@ mkdir -p "$build_location/symlinks"
 
 cd "$build_location/symlinks"
 
-cat "$serviceref_list"* | grep -o '^.*_0_.*_.*_.*_.*_.*_0_0_0' | sort | uniq | while read serviceref ; do
-    unique_id=$(echo "$serviceref" | sed -n -e 's/^[^_]*_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
-    logo=$(cat "$source_location/srindex" | grep -i -m 1 "^$unique_id" | sed -n -e 's/.*=//p')
+cat "$serviceref_list"*"$style" | while read line ; do
 
-    if [ ! -z "$logo" ]; then
-        ln -s "$logo.png" "$serviceref.png"
+    IFS="|"
+    line_data=($line)
+    serviceref=$(echo ${line_data[0]} | tr -d [:space:])
+    link_srp=$(echo ${line_data[2]} | tr -d [:space:])
+    link_snp=$(echo ${line_data[3]} | tr -d [:space:])
+    
+    IFS="="
+    link_srp=($link_srp)
+    logo_srp=${link_srp[1]}
+    link_snp=($link_snp)
+    logo_snp=${link_snp[1]}
+    snpname=${link_snp[0]}
 
-        logoname=$(basename "$logo")
-        dir=$(dirname "$logo")
+    if [ ! "$logo_srp" = "--------" ]; then
+        ln -s -f "$logo_srp.png" "$serviceref.png"
+
+        logoname=$(basename "$logo_srp")
+        dir=$(dirname "$logo_srp")
 
         mkdir -p "$build_location/logos/$dir/white"
 
-        cp "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
+        cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
 
         if [ -f "$source_location/$dir/white/$logoname."* ]; then
-            cp "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"
+            cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"
+        fi
+    fi
+
+    if [ "$style" = "snp" ]; then
+        if [ ! "$logo_snp" = "--------" ]; then
+            ln -s -f "$logo_snp.png" "$snpname.png"
+
+            logoname=$(basename "$logo_snp")
+            dir=$(dirname "$logo_snp")
+
+            mkdir -p "$build_location/logos/$dir/white"
+
+            cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
+
+            if [ -f "$source_location/$dir/white/$logoname."* ]; then
+                cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"
+            fi
         fi
     fi
 done

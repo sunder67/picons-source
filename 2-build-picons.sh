@@ -3,6 +3,19 @@
 #Ubuntu packages: imagemagick pngquant binutils librsvg2-bin
 #Cygwin packages: imagemagick pngquant binutils rsvg
 
+if [ -z "$1" ]; then
+    echo "Which style are you going to build?"
+    select choice in "Service Reference" "Service Name" "Exit"; do
+        case $choice in
+            "Service Reference" ) style=srp; break;;
+            "Service Name" ) style=snp; break;;
+            "Exit" ) exit;;
+        esac
+    done
+else
+    style=$1
+fi
+
 version="$(date +'%Y-%m-%d--%H-%M-%S')"
 timestamp="$(echo ${version//-/} | rev | cut -c 3- | rev).$(echo ${version//-/} | cut -c 13-)"
 
@@ -32,7 +45,7 @@ echo "$(date +'%H:%M:%S') - Checking logos"
 "$buildtools/check-logos.sh" "$buildsource/radio"
 
 echo "$(date +'%H:%M:%S') - Creating symlinks and copying logos"
-"$buildtools/create-symlinks+copy-logos.sh" "$location/build-output/servicelist_" "$temp/newbuildsource" "$buildsource"
+"$buildtools/create-symlinks+copy-logos.sh" "$location/build-output/servicelist-" "$temp/newbuildsource" "$buildsource" "$style"
 
 echo "$(date +'%H:%M:%S') - Converting svg files"
 for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
@@ -49,7 +62,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
         backgroundcolorname=$(basename ${backgroundcolor%.*.*})
 
         echo "$(date +'%H:%M:%S') -----------------------------------------------------------"
-        echo "$(date +'%H:%M:%S') - Creating picons: $backgroundname.$backgroundcolorname"
+        echo "$(date +'%H:%M:%S') - Creating picons: $style.$backgroundname.$backgroundcolorname"
 
         mkdir -p "$temp/finalpicons/picon"
 
@@ -110,21 +123,21 @@ for background in "$buildsource/backgrounds/"*.build ; do
             fi
         done
 
-        echo "$(date +'%H:%M:%S') - Creating binary packages: $backgroundname.$backgroundcolorname"
+        echo "$(date +'%H:%M:%S') - Creating binary packages: $style.$backgroundname.$backgroundcolorname"
         cp --no-dereference "$temp/newbuildsource/symlinks/"* "$temp/finalpicons/picon"
 
-        packagename="$backgroundname.${backgroundcolorname}_${version}"
+        packagename="$style.$backgroundname.${backgroundcolorname}_${version}"
 
         if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ] || [ "$backgroundname" = "400x170" ]; then
             mkdir "$temp/finalpicons/CONTROL" ; cat > "$temp/finalpicons/CONTROL/control" <<-EOF
-				Package: enigma2-plugin-picons-$backgroundname.$backgroundcolorname
+				Package: enigma2-plugin-picons-$style.$backgroundname.$backgroundcolorname
 				Version: $version
 				Section: base
 				Architecture: all
 				Maintainer: http://picons.github.io
 				Source: https://github.com/picons/picons-source
-				Description: $backgroundname Picons ($backgroundcolorname)
-				OE: enigma2-plugin-picons-$backgroundname.$backgroundcolorname
+				Description: $style.$backgroundname.$backgroundcolorname
+				OE: enigma2-plugin-picons-$style.$backgroundname.$backgroundcolorname
 				HomePage: http://picons.github.io
 				License: unknown
 				Priority: optional
