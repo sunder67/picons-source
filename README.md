@@ -27,6 +27,8 @@ cd "/tmp/picons-source"
 ./2-build-picons.sh
 ```
 
+TIP: If you know what you are doing and want to get dirty, you can use the command `./2-build-picons.sh dirtysrp` or `./2-build-picons.sh dirtysnp`.
+
 CONTRIBUTING
 ============
 
