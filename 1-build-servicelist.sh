@@ -54,7 +54,7 @@ if [ -d "$location/build-input/enigma2" ]; then
         echo -ne "Channels found: $currentline"\\r
     done
 
-    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |  ' > "$file"
+    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |X|  ' > "$file"
     rm "$tempfile"
     echo "Enigma2: Exported to $file"
 else
@@ -95,7 +95,7 @@ if [ -d "$location/build-input/tvheadend" ]; then
         echo -ne "Channels found: $currentline"\\r
     done
 
-    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |  ' > "$file"
+    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |X|  ' > "$file"
     rm "$tempfile"
     echo "TvHeadend: Exported to $file"
 else
@@ -154,7 +154,7 @@ if [ -f "$location/build-input/channels.conf" ]; then
         echo -ne "Channels found: $currentline"\\r
     done
 
-    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |  ' > "$file"
+    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |X|  ' > "$file"
     rm "$tempfile"
     echo "VDR: Exported to $file"
 else
