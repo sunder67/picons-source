@@ -30,6 +30,17 @@ buildsource="$location/build-source"
 buildtools="$location/build-tools"
 binaries="$location/build-output/binaries"
 
+if [ "$style" = "srp" ] || [ "$style" = "snp" ]; then
+    for file in "$location/build-output/servicelist-"*"-$style" ; do
+        if [ ! -f "$file" ]; then
+            echo "No $style servicelist has been found! Exiting..."
+            exit
+        fi
+    done
+else
+    echo "You are using an unsupported style! Keep it tidy!"
+fi
+
 if [ -d "$temp" ]; then rm -rf "$temp"; fi
 mkdir "$temp"
 
