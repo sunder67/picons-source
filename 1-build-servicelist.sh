@@ -33,7 +33,8 @@ if [ -d "$location/build-input/enigma2" ]; then
         serviceref_id=$(echo "$serviceref" | sed -n -e 's/^[^_]*_0_[^_]*_//p' | sed -n -e 's/_0_0_0$//p')
         channelref=(${serviceref//_/ })
         channelname=$(cat "$location/build-input/enigma2/lamedb" | grep -i -A1 "${channelref[3]}:.*${channelref[6]}:.*${channelref[4]}:.*${channelref[5]}:.*:.*" | sed -n "2p" | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
-        snpname=$(echo $channelname | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
+        channelname=$(echo "$channelname" | sed -e 's/|//g')
+        snpname=$(echo "$channelname" | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
         if [ -z "$snpname" ]; then
             snpname="--------"
         fi
@@ -54,7 +55,7 @@ if [ -d "$location/build-input/enigma2" ]; then
         echo -ne "Channels found: $currentline"\\r
     done
 
-    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |X|  ' > "$file"
+    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |  ' > "$file"
     rm "$tempfile"
     echo "Enigma2: Exported to $file"
 else
@@ -74,7 +75,8 @@ if [ -d "$location/build-input/tvheadend" ]; then
         serviceref_id=$(echo "$serviceref" | sed -n -e 's/^[^_]*_0_[^_]*_//p' | sed -n -e 's/_0_0_0$//p')
         tvhservice=$(cat $channelfile | grep -A1 'services' | sed -n "2p" | sed -e 's/"//g' -e 's/,//g')
         channelname=$(cat $(find "$location/build-input/tvheadend" -type f -name $tvhservice) | grep 'svcname' | sed -e 's/.*"svcname": "//g' -e 's/",//g' | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
-        snpname=$(echo $channelname | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
+        channelname=$(echo "$channelname" | sed -e 's/|//g')
+        snpname=$(echo "$channelname" | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
         if [ -z "$snpname" ]; then
             snpname="--------"
         fi
@@ -95,7 +97,7 @@ if [ -d "$location/build-input/tvheadend" ]; then
         echo -ne "Channels found: $currentline"\\r
     done
 
-    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |X|  ' > "$file"
+    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |  ' > "$file"
     rm "$tempfile"
     echo "TvHeadend: Exported to $file"
 else
@@ -115,6 +117,7 @@ if [ -f "$location/build-input/channels.conf" ]; then
         IFS=";"
         channelname=(${vdrchannel[0]})
         channelname=$(echo ${channelname[0]} | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
+        channelname=$(echo "$channelname" | sed -e 's/|//g')
 
         sid=$(printf "%x\n" ${vdrchannel[9]})
         tid=$(printf "%x\n" ${vdrchannel[11]})
@@ -133,7 +136,7 @@ if [ -f "$location/build-input/channels.conf" ]; then
         esac
 
         unique_id=$(echo "$sid"'_'"$tid"'_'"$nid"'_'"$namespace" | sed -e 's/.*/\U&\E/')
-        snpname=$(echo $channelname | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
+        snpname=$(echo "$channelname" | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
         if [ -z "$snpname" ]; then
             snpname="--------"
         fi
@@ -154,7 +157,7 @@ if [ -f "$location/build-input/channels.conf" ]; then
         echo -ne "Channels found: $currentline"\\r
     done
 
-    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |X|  ' > "$file"
+    cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | column -t -s $'\t' -o $'  |  ' > "$file"
     rm "$tempfile"
     echo "VDR: Exported to $file"
 else

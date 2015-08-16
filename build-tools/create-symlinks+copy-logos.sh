@@ -15,7 +15,7 @@ cd "$build_location/symlinks"
 
 cat "$serviceref_list"*"$style" | while read line ; do
 
-    IFS="|X|"
+    IFS="|"
     line_data=($line)
     serviceref=$(echo ${line_data[0]} | tr -d [:space:])
     link_srp=$(echo ${line_data[2]} | tr -d [:space:])
