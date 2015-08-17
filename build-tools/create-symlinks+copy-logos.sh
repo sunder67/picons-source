@@ -14,7 +14,7 @@ mkdir -p "$build_location/symlinks"
 cd "$build_location/symlinks"
 
 if [ "$style" = "snp" ] || [ "$style" = "srp" ]; then
-    cat "$serviceref_list"*"$style" | tr -d [:blank:] | while read line ; do
+    cat "$serviceref_list"*"$style" | tr -d [:blank:] | tr -d [=*=] | while read line ; do
         IFS="|"
         line_data=($line)
         serviceref=${line_data[0]}
