@@ -1,5 +1,17 @@
 #!/bin/bash
 
+commands=( sed grep tr column cat sort uniq find echo rm )
+
+for i in "${commands[@]}"; do
+    if ! which $i &> /dev/null; then
+        missingcommands="$i $missingcommands"
+    fi
+done
+if [ ! -z "$missingcommands" ]; then
+    echo "The following commands are not found: $missingcommands"
+    exit
+fi
+
 if [ -z "$1" ]; then
     echo "Which style are you going to build?"
     select choice in "Service Reference" "Service Name" "Exit"; do

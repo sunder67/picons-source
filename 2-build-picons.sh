@@ -1,7 +1,20 @@
 #!/bin/bash
 
-#Ubuntu packages: imagemagick pngquant binutils librsvg2-bin
-#Cygwin packages: imagemagick pngquant binutils rsvg
+commands=( convert pngquant rsvg-convert ar tar xz sed grep tr column cat sort uniq find echo mkdir chmod rm cp mv ln )
+
+for i in "${commands[@]}"; do
+    if ! which $i &> /dev/null; then
+        missingcommands="$i $missingcommands"
+    fi
+done
+if [ ! -z "$missingcommands" ]; then
+    echo "The following commands are not found: $missingcommands"
+    echo ""
+    echo "Try installing the following packages:"
+    echo "imagemagick pngquant binutils librsvg2-bin (Ubuntu)"
+    echo "imagemagick pngquant binutils rsvg (Cygwin)"
+    exit
+fi
 
 if [ -z "$1" ]; then
     echo "Which style are you going to build?"
