@@ -1,6 +1,6 @@
 #!/bin/bash
 
-commands=( sed grep tr column cat sort uniq find echo rm )
+commands=( sed grep tr column cat sort uniq find echo rm wc )
 
 for i in "${commands[@]}"; do
     if ! which $i &> /dev/null; then
@@ -36,13 +36,15 @@ fi
 
 #Enigma2
 if [ -d "$location/build-input/enigma2" ]; then
-    echo "Enigma2: Converting channellist..."
-
     file="$location/build-output/servicelist-enigma2-$style"
     tempfile="$temp/$(echo $RANDOM)"
     lamedb=$(<"$location/build-input/enigma2/lamedb")
+    channelcount=$(cat "$location/build-input/enigma2/"*bouquet.* | grep -o '#SERVICE .*:0:.*:.*:.*:.*:.*:0:0:0' | sort | uniq | wc -l)
 
     cat "$location/build-input/enigma2/"*bouquet.* | grep -o '#SERVICE .*:0:.*:.*:.*:.*:.*:0:0:0' | sed -e 's/#SERVICE //g' -e 's/.*/\U&\E/' -e 's/:/_/g' | sort | uniq | while read serviceref ; do
+        ((currentline++))
+        echo -ne "Enigma2: Converting channel: $currentline/$channelcount"\\r
+
         serviceref_id=$(sed -e 's/^[^_]*_0_[^_]*_//g' -e 's/_0_0_0$//g' <<< "$serviceref")
         unique_id=${serviceref_id%????}
         channelref=(${serviceref//_/ })
@@ -60,8 +62,6 @@ if [ -d "$location/build-input/enigma2" ]; then
         else
             echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp" >> "$tempfile"
         fi
-        ((currentline++))
-        echo -ne "Channels found: $currentline"\\r
     done
 
     cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | sed -e 's/\t/§|/g' | column -t -s $'§' | sed -e 's/|/  |  /g' > "$file"
@@ -73,12 +73,14 @@ fi
 
 #TvHeadend
 if [ -d "$location/build-input/tvheadend" ]; then
-    echo "TvHeadend: Converting channellist..."
-
     file="$location/build-output/servicelist-tvheadend-$style"
     tempfile="$temp/$(echo $RANDOM)"
+    channelcount=$(find "$location/build-input/tvheadend/channel/config/" -maxdepth 1 -type f | wc -l)
 
     for channelfile in "$location/build-input/tvheadend/channel/config/"* ; do
+        ((currentline++))
+        echo -ne "TvHeadend: Converting channel: $currentline/$channelcount"\\r
+
         serviceref=$(grep -o '1_0_.*_.*_.*_.*_.*_0_0_0' "$channelfile")
         serviceref_id=$(sed -e 's/^[^_]*_0_[^_]*_//g' -e 's/_0_0_0$//g' <<< "$serviceref")
         unique_id=${serviceref_id%????}
@@ -97,8 +99,6 @@ if [ -d "$location/build-input/tvheadend" ]; then
         else
             echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp" >> "$tempfile"
         fi
-        ((currentline++))
-        echo -ne "Channels found: $currentline"\\r
     done
 
     cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | sed -e 's/\t/§|/g' | column -t -s $'§' | sed -e 's/|/  |  /g' > "$file"
@@ -110,12 +110,14 @@ fi
 
 #VDR
 if [ -f "$location/build-input/channels.conf" ]; then
-    echo "VDR: Converting channellist..."
-
     file="$location/build-output/servicelist-vdr-$style"
     tempfile="$temp/$(echo $RANDOM)"
+    channelcount=$(cat "$location/build-input/channels.conf" | grep -o '.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:0' | sort | uniq | wc -l)
 
     cat "$location/build-input/channels.conf" | grep -o '.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:.*:0' | sort | uniq | while read channel ; do
+        ((currentline++))
+        echo -ne "VDR: Converting channel: $currentline/$channelcount"\\r
+
         IFS=":"
         vdrchannel=($channel)
         IFS=";"
@@ -154,8 +156,6 @@ if [ -f "$location/build-input/channels.conf" ]; then
         else
             echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp" >> "$tempfile"
         fi
-        ((currentline++))
-        echo -ne "Channels found: $currentline"\\r
     done
 
     cat "$tempfile" | sort -t $'\t' -k 2,2 | uniq | sed -e 's/\t/§|/g' | column -t -s $'§' | sed -e 's/|/  |  /g' > "$file"
