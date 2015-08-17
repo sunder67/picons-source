@@ -30,6 +30,17 @@ buildsource="$location/build-source"
 buildtools="$location/build-tools"
 binaries="$location/build-output/binaries"
 
+if [ "$style" = "srp" ] || [ "$style" = "snp" ]; then
+    for file in "$location/build-output/servicelist-"*"-$style" ; do
+        if [ ! -f "$file" ]; then
+            echo "No $style servicelist has been found! Exiting..."
+            exit
+        fi
+    done
+else
+    echo "You are using an unsupported style! Keep it tidy!"
+fi
+
 if [ -d "$temp" ]; then rm -rf "$temp"; fi
 mkdir "$temp"
 
@@ -39,6 +50,10 @@ mkdir "$binaries"
 chmod -R 755 "$buildtools/"*.sh
 
 echo "$(date +'%H:%M:%S') - Version: $version"
+
+echo "$(date +'%H:%M:%S') - Checking index"
+"$buildtools/check-index.sh" "$buildsource" "srp"
+"$buildtools/check-index.sh" "$buildsource" "snp"
 
 echo "$(date +'%H:%M:%S') - Checking logos"
 "$buildtools/check-logos.sh" "$buildsource/tv"
