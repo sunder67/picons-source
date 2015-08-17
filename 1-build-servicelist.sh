@@ -14,6 +14,7 @@ else
 fi
 
 location=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+index=$(<"$location/build-source/$style-index")
 
 if [ -d "/dev/shm" ]; then
     temp="/dev/shm"
@@ -27,31 +28,27 @@ if [ -d "$location/build-input/enigma2" ]; then
 
     file="$location/build-output/servicelist-enigma2-$style"
     tempfile="$temp/$(echo $RANDOM)"
+    lamedb=$(<"$location/build-input/enigma2/lamedb")
 
     cat "$location/build-input/enigma2/"*bouquet.* | grep -o '#SERVICE .*:0:.*:.*:.*:.*:.*:0:0:0' | sed -e 's/#SERVICE //g' -e 's/.*/\U&\E/' -e 's/:/_/g' | sort | uniq | while read serviceref ; do
-        unique_id=$(echo "$serviceref" | sed -n -e 's/^[^_]*_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
-        serviceref_id=$(echo "$serviceref" | sed -n -e 's/^[^_]*_0_[^_]*_//p' | sed -n -e 's/_0_0_0$//p')
+        serviceref_id=$(sed -e 's/^[^_]*_0_[^_]*_//g' -e 's/_0_0_0$//g' <<< "$serviceref")
+        unique_id=${serviceref_id%????}
         channelref=(${serviceref//_/ })
-        channelname=$(cat "$location/build-input/enigma2/lamedb" | grep -i -A1 "${channelref[3]}:.*${channelref[6]}:.*${channelref[4]}:.*${channelref[5]}:.*:.*" | sed -n "2p" | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
-        channelname=$(echo "$channelname" | sed -e 's/|//g' -e 's/§//g')
-        snpname=$(echo "$channelname" | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
-        if [ -z "$snpname" ]; then
-            snpname="--------"
-        fi
-        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id" | sed -n -e 's/.*=//p')
-        if [ -z "$logo_srp" ]; then
-            logo_srp="--------"
-        fi
-        logo_snp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$snpname=" | sed -n -e 's/.*=//p')
-        if [ -z "$logo_snp" ]; then
-            logo_snp="--------"
-        fi
+        channelname=$(grep -i -A1 "${channelref[3]}:.*${channelref[6]}:.*${channelref[4]}:.*${channelref[5]}:.*:.*" <<< "$lamedb" | sed -n "2p" | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//' -e 's/|//g' -e 's/§//g')
+
+        logo_srp=$(grep -i -m 1 "^$unique_id" <<< "$index" | sed -n -e 's/.*=//p')
+        if [ -z "$logo_srp" ]; then logo_srp="--------"; fi
+
         if [ "$style" = "snp" ]; then
+            snpname=$(sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g' <<< "$channelname")
+            if [ -z "$snpname" ]; then snpname="--------"; fi
+            logo_snp=$(grep -i -m 1 "^$snpname=" <<< "$index" | sed -n -e 's/.*=//p')
+            if [ -z "$logo_snp" ]; then logo_snp="--------"; fi
             echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp\t$snpname=$logo_snp" >> "$tempfile"
         else
             echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp" >> "$tempfile"
         fi
-        currentline=$((currentline+1))
+        ((currentline++))
         echo -ne "Channels found: $currentline"\\r
     done
 
@@ -70,30 +67,25 @@ if [ -d "$location/build-input/tvheadend" ]; then
     tempfile="$temp/$(echo $RANDOM)"
 
     for channelfile in "$location/build-input/tvheadend/channel/config/"* ; do
-        serviceref=$(cat $channelfile | grep -o '1_0_.*_.*_.*_.*_.*_0_0_0')
-        unique_id=$(echo "$serviceref" | sed -n -e 's/^1_0_[^_]*_//p' | sed -n -e 's/...._0_0_0$//p')
-        serviceref_id=$(echo "$serviceref" | sed -n -e 's/^[^_]*_0_[^_]*_//p' | sed -n -e 's/_0_0_0$//p')
-        tvhservice=$(cat $channelfile | grep -A1 'services' | sed -n "2p" | sed -e 's/"//g' -e 's/,//g')
-        channelname=$(cat $(find "$location/build-input/tvheadend" -type f -name $tvhservice) | grep 'svcname' | sed -e 's/.*"svcname": "//g' -e 's/",//g' | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
-        channelname=$(echo "$channelname" | sed -e 's/|//g' -e 's/§//g')
-        snpname=$(echo "$channelname" | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
-        if [ -z "$snpname" ]; then
-            snpname="--------"
-        fi
-        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id" | sed -n -e 's/.*=//p')
-        if [ -z "$logo_srp" ]; then
-            logo_srp="--------"
-        fi
-        logo_snp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$snpname=" | sed -n -e 's/.*=//p')
-        if [ -z "$logo_snp" ]; then
-            logo_snp="--------"
-        fi
+        serviceref=$(grep -o '1_0_.*_.*_.*_.*_.*_0_0_0' "$channelfile")
+        serviceref_id=$(sed -e 's/^[^_]*_0_[^_]*_//g' -e 's/_0_0_0$//g' <<< "$serviceref")
+        unique_id=${serviceref_id%????}
+        tvhservice=$(grep -A1 'services' "$channelfile" | sed -n "2p" | sed -e 's/"//g' -e 's/,//g')
+        channelname=$(grep 'svcname' $(find "$location/build-input/tvheadend" -type f -name $tvhservice) | sed -e 's/.*"svcname": "//g' -e 's/",//g' | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//' -e 's/|//g' -e 's/§//g')
+
+        logo_srp=$(grep -i -m 1 "^$unique_id" <<< "$index" | sed -n -e 's/.*=//p')
+        if [ -z "$logo_srp" ]; then logo_srp="--------"; fi
+
         if [ "$style" = "snp" ]; then
+            snpname=$(sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g' <<< "$channelname")
+            if [ -z "$snpname" ]; then snpname="--------"; fi
+            logo_snp=$(grep -i -m 1 "^$snpname=" <<< "$index" | sed -n -e 's/.*=//p')
+            if [ -z "$logo_snp" ]; then logo_snp="--------"; fi
             echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp\t$snpname=$logo_snp" >> "$tempfile"
         else
             echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp" >> "$tempfile"
         fi
-        currentline=$((currentline+1))
+        ((currentline++))
         echo -ne "Channels found: $currentline"\\r
     done
 
@@ -115,17 +107,14 @@ if [ -f "$location/build-input/channels.conf" ]; then
         IFS=":"
         vdrchannel=($channel)
         IFS=";"
-        channelname=(${vdrchannel[0]})
-        channelname=$(echo ${channelname[0]} | iconv -c -f utf-8 -t ascii | sed -e 's/^[ \t]*//')
-        channelname=$(echo "$channelname" | sed -e 's/|//g' -e 's/§//g')
 
         sid=$(printf "%x\n" ${vdrchannel[9]})
         tid=$(printf "%x\n" ${vdrchannel[11]})
         nid=$(printf "%x\n" ${vdrchannel[10]})
 
         case ${vdrchannel[3]} in
-            *"W") namespace=$(printf "%x\n" $(echo "${vdrchannel[3]}" | sed -e 's/S//' -e 's/W//' | awk '{printf "%.0f\n", 3600-($1*10)}'));;
-            *"E") namespace=$(printf "%x\n" $(echo "${vdrchannel[3]}" | sed -e 's/S//' -e 's/E//' | awk '{printf "%.0f\n", $1*10}'));;
+            *"W") namespace=$(printf "%x\n" $(sed -e 's/S//' -e 's/W//' <<< "${vdrchannel[3]}" | awk '{printf "%.0f\n", 3600-($1*10)}'));;
+            *"E") namespace=$(printf "%x\n" $(sed -e 's/S//' -e 's/E//' <<< "${vdrchannel[3]}" | awk '{printf "%.0f\n", $1*10}'));;
             "T") namespace="EEEE";;
             "C") namespace="FFFF";;
         esac
@@ -135,25 +124,25 @@ if [ -f "$location/build-input/channels.conf" ]; then
             *"=27") channeltype="19";;
         esac
 
-        unique_id=$(echo "$sid"'_'"$tid"'_'"$nid"'_'"$namespace" | sed -e 's/.*/\U&\E/')
-        snpname=$(echo "$channelname" | sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g')
-        if [ -z "$snpname" ]; then
-            snpname="--------"
-        fi
-        logo_srp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$unique_id" | sed -n -e 's/.*=//p')
-        if [ -z "$logo_srp" ]; then
-            logo_srp="--------"
-        fi
-        logo_snp=$(cat "$location/build-source/$style-index" | grep -i -m 1 "^$snpname=" | sed -n -e 's/.*=//p')
-        if [ -z "$logo_snp" ]; then
-            logo_snp="--------"
-        fi
+        unique_id=$(sed -e 's/.*/\U&\E/' <<< "$sid"'_'"$tid"'_'"$nid"'_'"$namespace")
+        serviceref='1_0_'"$channeltype"'_'"$unique_id"'0000_0_0_0'
+        serviceref_id="$unique_id"'0000'
+        channelname=(${vdrchannel[0]})
+        channelname=$(iconv -c -f utf-8 -t ascii <<< "${channelname[0]}" | sed -e 's/^[ \t]*//' -e 's/|//g' -e 's/§//g')
+
+        logo_srp=$(grep -i -m 1 "^$unique_id" <<< "$index" | sed -n -e 's/.*=//p')
+        if [ -z "$logo_srp" ]; then logo_srp="--------"; fi
+
         if [ "$style" = "snp" ]; then
-            echo -e '1_0_'"$channeltype"'_'"$unique_id"'0000_0_0_0'"\t$channelname\t$unique_id"'0000'"=$logo_srp\t$snpname=$logo_snp" >> "$tempfile"
+            snpname=$(sed -e 's/&/and/g' -e 's/*/star/g' -e 's/+/plus/g' -e 's/\(.*\)/\L\1/g' -e 's/[^a-z0-9]//g' <<< "$channelname")
+            if [ -z "$snpname" ]; then snpname="--------"; fi
+            logo_snp=$(grep -i -m 1 "^$snpname=" <<< "$index" | sed -n -e 's/.*=//p')
+            if [ -z "$logo_snp" ]; then logo_snp="--------"; fi
+            echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp\t$snpname=$logo_snp" >> "$tempfile"
         else
-            echo -e '1_0_'"$channeltype"'_'"$unique_id"'0000_0_0_0'"\t$channelname\t$unique_id"'0000'"=$logo_srp" >> "$tempfile"
+            echo -e "$serviceref\t$channelname\t$serviceref_id=$logo_srp" >> "$tempfile"
         fi
-        currentline=$((currentline+1))
+        ((currentline++))
         echo -ne "Channels found: $currentline"\\r
     done
 
