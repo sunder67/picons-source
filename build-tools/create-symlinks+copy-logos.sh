@@ -14,12 +14,12 @@ mkdir -p "$build_location/symlinks"
 cd "$build_location/symlinks"
 
 if [ "$style" = "snp" ] || [ "$style" = "srp" ]; then
-    cat "$serviceref_list"*"$style" | while read line ; do
+    cat "$serviceref_list"*"$style" | tr -d [:blank:] | while read line ; do
         IFS="|"
         line_data=($line)
-        serviceref=$(echo ${line_data[0]} | tr -d [:space:])
-        link_srp=$(echo ${line_data[2]} | tr -d [:space:])
-        link_snp=$(echo ${line_data[3]} | tr -d [:space:])
+        serviceref=${line_data[0]}
+        link_srp=${line_data[2]}
+        link_snp=${line_data[3]}
 
         IFS="="
         link_srp=($link_srp)
@@ -35,9 +35,7 @@ if [ "$style" = "snp" ] || [ "$style" = "srp" ]; then
             dir=$(dirname "$logo_srp")
             mkdir -p "$build_location/logos/$dir/white"
             cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-            if [ -f "$source_location/$dir/white/$logoname."* ]; then
-                cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"
-            fi
+            if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
         fi
 
         if [ "$style" = "snp" ]; then
@@ -48,9 +46,7 @@ if [ "$style" = "snp" ] || [ "$style" = "srp" ]; then
                 dir=$(dirname "$logo_snp")
                 mkdir -p "$build_location/logos/$dir/white"
                 cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-                if [ -f "$source_location/$dir/white/$logoname."* ]; then
-                    cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"
-                fi
+                if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
             fi
         fi
     done
@@ -78,9 +74,7 @@ if [ "$style" = "dirtysnp" ]; then
         dir=$(dirname "$logo_snp")
         mkdir -p "$build_location/logos/$dir/white"
         cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-        if [ -f "$source_location/$dir/white/$logoname."* ]; then
-            cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"
-        fi
+        if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
     done
 fi
 
@@ -102,8 +96,6 @@ if [ "$style" = "dirtysrp" ]; then
         dir=$(dirname "$logo_srp")
         mkdir -p "$build_location/logos/$dir/white"
         cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-        if [ -f "$source_location/$dir/white/$logoname."* ]; then
-            cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"
-        fi
+        if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
     done
 fi
