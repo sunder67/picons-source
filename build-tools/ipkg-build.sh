@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ipkg-build -- construct a .ipk from a directory
 # Carl Worth <cworth@east.isi.edu>
@@ -10,7 +10,7 @@
 
 set -e
 
-version=1.0
+version=1.1
 
 ipkg_extract_value() {
     sed -e "s/^[^:]*:[[:space:]]*//"
@@ -109,8 +109,8 @@ You probably want to chown these to a system user: " >&2
     source=`required_field Source`
     [ "$?" -ne 0 ] && PKG_ERROR=1
     if [ -z "$source" ]; then
-        echo "The Source field contain the URL's or filenames of the source code and any patches" 
-        echo "used to build this package. Either gnu-style tarballs or Debian source packages "
+        echo "The Source field contains the URL's or filenames of the source code and any patches"
+        echo "used to build this package. Either gnu-style tarballs or Debian source packages"
         echo "are acceptable. Relative filenames may be used if they are distributed in the same"
         echo "directory as the .ipk file."
     fi
@@ -152,52 +152,51 @@ You probably want to chown these to a system user: " >&2
     return $PKG_ERROR
 }
 
-###
-# ipkg-build "main"
-###
+#######################
+## ipkg-build "main" ##
+#######################
 ogargs=""
 outer=ar
 noclean=0
 usage="Usage: $0 [-c] [-C] [-o owner] [-g group] <pkg_directory> [<destination_directory>]"
+
 while getopts "cg:ho:v" opt; do
     case $opt in
-    o ) owner=$OPTARG
-        ogargs="--owner=$owner"
-        ;;
-    g ) group=$OPTARG
-        ogargs="$ogargs --group=$group"
-        ;;
-    c ) outer=tar
-        ;;
-    C ) noclean=1
-        ;;
-    v ) echo $version
-        exit 0
-        ;;
-    h ) echo $usage  >&2 ;;
-    \? ) echo $usage  >&2
+        o)  owner=$OPTARG
+            ogargs="--owner=$owner"
+            ;;
+        g)  group=$OPTARG
+            ogargs="$ogargs --group=$group"
+            ;;
+        c)  outer=tar
+            ;;
+        C)  noclean=1
+            ;;
+        v)  echo $version
+            exit 0
+            ;;
+        h)  echo $usage  >&2
+            ;;
+       \?)  echo $usage  >&2
+            ;;
     esac
 done
 
-
 shift $(($OPTIND - 1))
 
-# continue on to process additional arguments
+# Continue on to process additional arguments
 
 case $# in
-1)
-    dest_dir=$PWD
-    ;;
-2)
-    dest_dir=$2
-    if [ "$dest_dir" = "." -o "$dest_dir" = "./" ] ; then
-        dest_dir=$PWD
-    fi
-    ;;
-*)
-    echo $usage >&2
-    exit 1 
-    ;;
+    1)  dest_dir=$PWD
+        ;;
+    2)  dest_dir=$2
+        if [ "$dest_dir" = "." -o "$dest_dir" = "./" ] ; then
+            dest_dir=$PWD
+        fi
+        ;;
+    *)  echo $usage >&2
+        exit 1
+        ;;
 esac
 
 pkg_dir=$1
@@ -208,9 +207,11 @@ if [ ! -d $pkg_dir ]; then
 fi
 
 # CONTROL is second so that it takes precedence
+
 CONTROL=
 [ -d $pkg_dir/DEBIAN ] && CONTROL=DEBIAN
 [ -d $pkg_dir/CONTROL ] && CONTROL=CONTROL
+
 if [ -z "$CONTROL" ]; then
     echo "*** Error: Directory $pkg_dir has no CONTROL subdirectory." >&2
     exit 1
