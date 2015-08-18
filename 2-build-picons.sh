@@ -1,13 +1,13 @@
 #!/bin/bash
 
-commands=( convert pngquant rsvg-convert ar tar xz sed grep tr column cat sort uniq find echo mkdir chmod rm cp mv ln )
+commands=( convert pngquant rsvg-convert ar tar xz sed grep tr column cat sort find echo mkdir chmod rm cp mv ln pwd )
 
 for i in "${commands[@]}"; do
     if ! which $i &> /dev/null; then
         missingcommands="$i $missingcommands"
     fi
 done
-if [ ! -z "$missingcommands" ]; then
+if [[ ! -z $missingcommands ]]; then
     echo "The following commands are not found: $missingcommands"
     echo ""
     echo "Try installing the following packages:"
@@ -16,7 +16,7 @@ if [ ! -z "$missingcommands" ]; then
     exit
 fi
 
-if [ -z "$1" ]; then
+if [[ -z $1 ]]; then
     echo "Which style are you going to build?"
     select choice in "Service Reference" "Service Name" "Exit"; do
         case $choice in
@@ -32,7 +32,7 @@ fi
 version="$(date +'%Y-%m-%d--%H-%M-%S')"
 timestamp="$(echo ${version//-/} | rev | cut -c 3- | rev).$(echo ${version//-/} | cut -c 13-)"
 
-if [ -d "/dev/shm" ]; then
+if [[ -d /dev/shm ]]; then
     temp="/dev/shm/picons-tmp"
 else
     temp="/tmp/picons-tmp"
@@ -43,9 +43,9 @@ buildsource="$location/build-source"
 buildtools="$location/build-tools"
 binaries="$location/build-output/binaries"
 
-if [ "$style" = "srp" ] || [ "$style" = "snp" ]; then
+if [[ $style = "srp" ]] || [[ $style = "snp" ]]; then
     for file in "$location/build-output/servicelist-"*"-$style" ; do
-        if [ ! -f "$file" ]; then
+        if [[ ! -f $file ]]; then
             echo "No $style servicelist has been found! Exiting..."
             exit
         fi
@@ -54,10 +54,10 @@ else
     echo "You are using an unsupported style! Keep it tidy!"
 fi
 
-if [ -d "$temp" ]; then rm -rf "$temp"; fi
+if [[ -d $temp ]]; then rm -rf "$temp"; fi
 mkdir "$temp"
 
-if [ -d "$binaries" ]; then rm -rf "$binaries"; fi
+if [[ -d $binaries ]]; then rm -rf "$binaries"; fi
 mkdir "$binaries"
 
 chmod -R 755 "$buildtools/"*.sh
@@ -95,50 +95,50 @@ for background in "$buildsource/backgrounds/"*.build ; do
         mkdir -p "$temp/finalpicons/picon"
 
         for directory in "$temp/newbuildsource/logos/"* ; do
-            if [ -d "$directory" ]; then
+            if [[ -d $directory ]]; then
                 directory=${directory##*/}
                 for logo in "$temp/newbuildsource/logos/$directory/"*.png ; do
-                    if [ -f "$logo" ]; then
+                    if [[ -f $logo ]]; then
                         logoname=$(basename ${logo%.*})
 
-                        if ! [ -d "$temp/finalpicons/picon/$directory" ]; then
+                        if [[ ! -d $temp/finalpicons/picon/$directory ]]; then
                             mkdir -p "$temp/finalpicons/picon/$directory"
                         fi
 
-                        if [[ "$backgroundcolorname" == *-white* ]]; then
-                            if [ -f "$temp/newbuildsource/logos/$directory/white/$logoname.png" ]; then
+                        if [[ $backgroundcolorname == *-white* ]]; then
+                            if [[ -f $temp/newbuildsource/logos/$directory/white/$logoname.png ]]; then
                                 logo="$temp/newbuildsource/logos/$directory/white/$logoname.png"
                             fi
                         fi
 
                         case "$backgroundname" in
                             "70x53")
-                                if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="70x53"; else resize="62x45"; fi
+                                if [[ $backgroundcolorname == *-nopadding ]]; then resize="70x53"; else resize="62x45"; fi
                                 extent="70x53"
                                 compress="pngquant -"
                                 ;;
                             "100x60")
-                                if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="100x60"; else resize="86x46"; fi
+                                if [[ $backgroundcolorname == *-nopadding ]]; then resize="100x60"; else resize="86x46"; fi
                                 extent="100x60"
                                 compress="pngquant -"
                                 ;;
                             "220x132")
-                                if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="220x132"; else resize="189x101"; fi
+                                if [[ $backgroundcolorname == *-nopadding ]]; then resize="220x132"; else resize="189x101"; fi
                                 extent="220x132"
                                 compress="pngquant -"
                                 ;;
                             "400x170")
-                                if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="400x170"; else resize="369x157"; fi
+                                if [[ $backgroundcolorname == *-nopadding ]]; then resize="400x170"; else resize="369x157"; fi
                                 extent="400x170"
                                 compress="pngquant -"
                                 ;;
                             "400x240")
-                                if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="400x240"; else resize="369x221"; fi
+                                if [[ $backgroundcolorname == *-nopadding ]]; then resize="400x240"; else resize="369x221"; fi
                                 extent="400x240"
                                 compress="pngquant -"
                                 ;;
                             "kodi")
-                                if [[ "$backgroundcolorname" == *-nopadding ]]; then resize="256x256"; else resize="226x226"; fi
+                                if [[ $backgroundcolorname == *-nopadding ]]; then resize="256x256"; else resize="226x226"; fi
                                 extent="256x256"
                                 compress="pngquant -"
                                 ;;
@@ -156,7 +156,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
         packagename="$style.$backgroundname.${backgroundcolorname}_${version}"
 
-        if [ "$backgroundname" = "70x53" ] || [ "$backgroundname" = "100x60" ] || [ "$backgroundname" = "220x132" ] || [ "$backgroundname" = "400x240" ] || [ "$backgroundname" = "400x170" ]; then
+        if [[ $backgroundname = "70x53" ]] || [[ $backgroundname = "100x60" ]] || [[ $backgroundname = "220x132" ]] || [[ $backgroundname = "400x240" ]] || [[ $backgroundname = "400x170" ]]; then
             mkdir "$temp/finalpicons/CONTROL" ; cat > "$temp/finalpicons/CONTROL/control" <<-EOF
 				Package: enigma2-plugin-picons-$style.$backgroundname.$backgroundcolorname
 				Version: $version
@@ -177,7 +177,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
             tar --dereference --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" --exclude="tv" --exclude="radio" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
         fi
 
-        if [ "$backgroundname" = "kodi" ]; then
+        if [[ $backgroundname = "kodi" ]]; then
             find "$temp/finalpicons" -exec touch --no-dereference -t "$timestamp" {} \;
             mv "$temp/finalpicons/picon" "$temp/finalpicons/$packagename"
             tar --owner=root --group=root -cf - --directory="$temp/finalpicons" "$packagename" | xz -9 --extreme --memlimit=40% > "$binaries/$packagename.tar.xz"
@@ -190,7 +190,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
 
 done
 
-if [ -d "$temp" ]; then rm -rf "$temp"; fi
+if [[ -d $temp ]]; then rm -rf "$temp"; fi
 
 echo -e "\nThe binary packages are located in:\n$binaries\n"
 read -p "Press any key to exit..." -n1 -s

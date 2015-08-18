@@ -5,7 +5,7 @@ build_location="$2"
 source_location="$3"
 style="$4"
 
-if [ -d "$build_location" ]; then
+if [[ -d $build_location ]]; then
     rm -rf "$build_location"
 fi
 
@@ -13,7 +13,7 @@ mkdir -p "$build_location/symlinks"
 
 cd "$build_location/symlinks"
 
-if [ "$style" = "snp" ] || [ "$style" = "srp" ]; then
+if [[ $style = "snp" ]] || [[ $style = "srp" ]]; then
     cat "$serviceref_list"*"$style" | tr -d [:blank:] | tr -d [=*=] | while read line ; do
         IFS="|"
         line_data=($line)
@@ -28,31 +28,31 @@ if [ "$style" = "snp" ] || [ "$style" = "srp" ]; then
         logo_snp=${link_snp[1]}
         snpname=${link_snp[0]}
 
-        if [ ! "$logo_srp" = "--------" ]; then
+        if [[ ! $logo_srp = "--------" ]]; then
             ln -s -f "$logo_srp.png" "$serviceref.png"
 
             logoname=$(basename "$logo_srp")
             dir=$(dirname "$logo_srp")
             mkdir -p "$build_location/logos/$dir/white"
-            cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-            if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
+            find "$source_location/$dir/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/" \;
+            find "$source_location/$dir/white/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/white/" \;
         fi
 
-        if [ "$style" = "snp" ]; then
-            if [ ! "$logo_snp" = "--------" ]; then
+        if [[ $style = "snp" ]]; then
+            if [[ ! $logo_snp = "--------" ]]; then
                 ln -s -f "$logo_snp.png" "$snpname.png"
 
                 logoname=$(basename "$logo_snp")
                 dir=$(dirname "$logo_snp")
                 mkdir -p "$build_location/logos/$dir/white"
-                cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-                if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
+                find "$source_location/$dir/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/" \;
+                find "$source_location/$dir/white/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/white/" \;
             fi
         fi
     done
 fi
 
-if [ "$style" = "dirtysnp" ]; then
+if [[ $style = "dirtysnp" ]]; then
     cat "$source_location/snp-index" | sed '1!G;h;$!d' | while read line ; do
         IFS="="
         link_snp=($line)
@@ -73,12 +73,12 @@ if [ "$style" = "dirtysnp" ]; then
         logoname=$(basename "$logo_snp")
         dir=$(dirname "$logo_snp")
         mkdir -p "$build_location/logos/$dir/white"
-        cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-        if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
+        find "$source_location/$dir/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/" \;
+        find "$source_location/$dir/white/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/white/" \;
     done
 fi
 
-if [ "$style" = "dirtysrp" ]; then
+if [[ $style = "dirtysrp" ]]; then
     cat "$source_location/srp-index" | sed '1!G;h;$!d' | while read line ; do
         IFS="="
         link_srp=($line)
@@ -95,7 +95,7 @@ if [ "$style" = "dirtysrp" ]; then
         logoname=$(basename "$logo_srp")
         dir=$(dirname "$logo_srp")
         mkdir -p "$build_location/logos/$dir/white"
-        cp -n "$source_location/$dir/$logoname."* "$build_location/logos/$dir/"
-        if [ -f "$source_location/$dir/white/$logoname."* ]; then cp -n "$source_location/$dir/white/$logoname."* "$build_location/logos/$dir/white/"; fi
+        find "$source_location/$dir/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/" \;
+        find "$source_location/$dir/white/" -maxdepth 1 -type f -name "$logoname.*" -exec cp -n {} "$build_location/logos/$dir/white/" \;
     done
 fi
