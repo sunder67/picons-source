@@ -53,7 +53,7 @@ if [[ $style = "snp" ]] || [[ $style = "srp" ]]; then
 fi
 
 if [[ $style = "dirtysnp" ]]; then
-    cat "$source_location/snp-index" | sed '1!G;h;$!d' | while read line ; do
+    sed '1!G;h;$!d' "$source_location/snp-index" | while read line ; do
         IFS="="
         link_snp=($line)
         logo_snp=${link_snp[1]}
@@ -79,7 +79,7 @@ if [[ $style = "dirtysnp" ]]; then
 fi
 
 if [[ $style = "dirtysrp" ]]; then
-    cat "$source_location/srp-index" | sed '1!G;h;$!d' | while read line ; do
+    sed '1!G;h;$!d' "$source_location/srp-index" | while read line ; do
         IFS="="
         link_srp=($line)
         logo_srp=${link_srp[1]}

@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# ipkg-build -- construct a .ipk from a directory
+# Steve Redler IV <steve@sr-tech.com>
 # Carl Worth <cworth@east.isi.edu>
-# based on a script by Steve Redler IV, steve@sr-tech.com 5-21-2001
-# 2003-04-25 rea@sr.unh.edu
-# Updated to work on Familiar Pre0.7rc1, with busybox tar.
-# Note it Requires: binutils-ar (since the busybox ar can't create)
-# For UID debugging it needs a better "find".
+# Robert E. Anderson <rea@sr.unh.edu>
+
+# Modified by picons.github.io
 
 set -e
 
