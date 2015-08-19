@@ -1,7 +1,8 @@
-This folder will contain the output from the build. A folder and one or more files like:
+This folder will contain the output from the build. A folder or two and one or more files like:
 
 ```
-binaries/
+binaries-snp/
+binaries-srp/
 servicelist-enigma2-snp
 servicelist-enigma2-srp
 servicelist-tvheadend-snp
