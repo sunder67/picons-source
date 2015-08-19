@@ -41,7 +41,7 @@ fi
 location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 buildsource="$location/build-source"
 buildtools="$location/build-tools"
-binaries="$location/build-output/binaries"
+binaries="$location/build-output/binaries-$style"
 
 if [[ $style = "srp" ]] || [[ $style = "snp" ]]; then
     for file in "$location/build-output/servicelist-"*"-$style" ; do
