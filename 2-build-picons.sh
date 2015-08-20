@@ -32,7 +32,7 @@ fi
 version="$(date +'%Y-%m-%d--%H-%M-%S')"
 timestamp="$(echo ${version//-/} | rev | cut -c 3- | rev).$(echo ${version//-/} | cut -c 13-)"
 
-if [[ -d /dev/shm ]]; then
+if [[ -d /dev/shm ]] && [[ ! -f /.dockerinit ]]; then
     temp="/dev/shm/picons-tmp"
 else
     temp="/tmp/picons-tmp"
