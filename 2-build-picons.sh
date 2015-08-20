@@ -85,9 +85,23 @@ else
     else
         backgroundname=$2
         if [[ -z $3 ]]; then
-            backgroundcolorname=""
+            for backgroundcolor in "$buildsource/backgrounds/$backgroundname/"* ; do
+                backgroundcolorname=$(basename ${backgroundcolor%.*})
+                backgroundcolors="$backgroundcolorname $backgroundcolors"
+            done
+
+            echo "Which background would you like to build?"
+            select choice in $backgroundcolors; do
+                if [[ ! -z $choice ]]; then
+                    backgroundcolorname=$choice; break
+                fi
+            done
         else
-            backgroundcolorname=$3
+            if [[ $3 = "all" ]]; then
+                backgroundcolorname=""
+            else
+                backgroundcolorname=$3
+            fi
         fi
     fi
 fi

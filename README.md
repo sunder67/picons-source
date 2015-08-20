@@ -36,6 +36,7 @@ TIP: If you know what you are doing, you can also use some of the following comm
 ./2-build-picons.sh srp
 ./2-build-picons.sh snp all
 ./2-build-picons.sh snp 100x60
+./2-build-picons.sh snp 100x60 all
 ./2-build-picons.sh srp 100x60 reflection-black
 ./2-build-picons.sh dirtysnp 100x60 reflection-black
 ...
