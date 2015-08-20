@@ -245,4 +245,7 @@ done
 if [[ -d $temp ]]; then rm -rf "$temp"; fi
 
 echo -e "\nThe binary packages are located in:\n$binaries\n"
-read -p "Press any key to exit..." -n1 -s
+
+if [[ -z $1 ]]; then
+    read -p "Press any key to exit..." -n1 -s
+fi

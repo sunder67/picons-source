@@ -165,4 +165,6 @@ else
     echo "VDR: $location/build-input/channels.conf not found"
 fi
 
-read -p "Press any key to exit..." -n1 -s
+if [[ -z $1 ]]; then
+    read -p "Press any key to exit..." -n1 -s
+fi
