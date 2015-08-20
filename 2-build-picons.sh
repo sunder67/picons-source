@@ -54,6 +54,44 @@ else
     echo "You are using an unsupported style! Keep it tidy!"
 fi
 
+if [[ -z $2 ]]; then
+    for background in "$buildsource/backgrounds/"* ; do
+        backgroundname=$(basename $background)
+        backgrounds="$backgroundname $backgrounds"
+    done
+
+    echo "Which resolution would you like to build?"
+    select choice in $backgrounds; do
+        if [[ ! -z $choice ]]; then
+            backgroundname=$choice; break
+        fi
+    done
+
+    for backgroundcolor in "$buildsource/backgrounds/$backgroundname/"* ; do
+        backgroundcolorname=$(basename ${backgroundcolor%.*})
+        backgroundcolors="$backgroundcolorname $backgroundcolors"
+    done
+
+    echo "Which background would you like to build?"
+    select choice in $backgroundcolors; do
+        if [[ ! -z $choice ]]; then
+            backgroundcolorname=$choice; break
+        fi
+    done
+else
+    if [[ $2 = "all" ]]; then
+        backgroundname=""
+        backgroundcolorname=""
+    else
+        backgroundname=$2
+        if [[ -z $3 ]]; then
+            backgroundcolorname=""
+        else
+            backgroundcolorname=$3
+        fi
+    fi
+fi
+
 if [[ -d $temp ]]; then rm -rf "$temp"; fi
 mkdir "$temp"
 
@@ -81,13 +119,13 @@ for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
     rm "$file"
 done
 
-for background in "$buildsource/backgrounds/"*.build ; do
+for background in "$buildsource/backgrounds/$backgroundname"* ; do
 
-    backgroundname=$(basename ${background%.*})
+    backgroundname=$(basename $background)
 
-    for backgroundcolor in "$buildsource/backgrounds/$backgroundname.build/"*.build ; do
+    for backgroundcolor in "$buildsource/backgrounds/$backgroundname/$backgroundcolorname"*.png ; do
 
-        backgroundcolorname=$(basename ${backgroundcolor%.*.*})
+        backgroundcolorname=$(basename ${backgroundcolor%.*})
 
         echo "$(date +'%H:%M:%S') -----------------------------------------------------------"
         echo "$(date +'%H:%M:%S') - Creating picons: $style.$backgroundname.$backgroundcolorname"
@@ -187,7 +225,7 @@ for background in "$buildsource/backgrounds/"*.build ; do
         rm -rf "$temp/finalpicons"
 
     done
-
+    backgroundcolorname=""
 done
 
 if [[ -d $temp ]]; then rm -rf "$temp"; fi
