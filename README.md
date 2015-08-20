@@ -30,6 +30,8 @@ cd "/tmp/picons-source"
 TIP: If you know what you are doing, you can also use some of the following commands:
 
 ```
+./1-build-servicelist.sh srp
+./1-build-servicelist.sh snp
 ./2-build-picons.sh dirtysrp
 ./2-build-picons.sh dirtysnp
 ./2-build-picons.sh snp
