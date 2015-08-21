@@ -9,16 +9,16 @@ for i in "${commands[@]}"; do
 done
 if [[ ! -z $missingcommands ]]; then
     echo "The following commands are not found: $missingcommands"
+    read -p "Press any key to exit..." -n1 -s
     exit
 fi
 
 if [[ -z $1 ]]; then
     echo "Which style are you going to build?"
-    select choice in "Service Reference" "Service Name" "Exit"; do
+    select choice in "Service Reference" "Service Name"; do
         case $choice in
             "Service Reference" ) style="srp"; break;;
             "Service Name" ) style="snp"; break;;
-            "Exit" ) exit;;
         esac
     done
 else
