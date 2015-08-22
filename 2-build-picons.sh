@@ -35,8 +35,9 @@ buildtools="$location/build-tools"
 binaries="$location/build-output/binaries-$style"
 
 if [[ -d $location/.git ]]; then
-    version="$(git rev-parse --short HEAD)"
-    timestamp="$(date --date=@$(git show -s --format=%ct $version) +'%Y%m%d%H%M.%S')"
+    hash="$(git rev-parse --short HEAD)"
+    version="$(date --date=@$(git show -s --format=%ct $hash) +'%Y-%m-%d--%H-%M-%S')"
+    timestamp="$(date --date=@$(git show -s --format=%ct $hash) +'%Y%m%d%H%M.%S')"
 else
     epoch="date +%s"
     version="$(date --date=@$($epoch) +'%Y-%m-%d--%H-%M-%S')"
