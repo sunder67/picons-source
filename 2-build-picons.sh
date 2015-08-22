@@ -34,7 +34,7 @@ buildsource="$location/build-source"
 buildtools="$location/build-tools"
 binaries="$location/build-output/binaries-$style"
 
-if [[ -d $location/.git ]]; then
+if [[ -d $location/.git ]] && which git &> /dev/null; then
     hash="$(git rev-parse --short HEAD)"
     version="$(date --date=@$(git show -s --format=%ct $hash) +'%Y-%m-%d--%H-%M-%S')"
     timestamp="$(date --date=@$(git show -s --format=%ct $hash) +'%Y%m%d%H%M.%S')"
