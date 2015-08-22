@@ -141,12 +141,15 @@ for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
     rm "$file"
 done
 
+logocount=$(find "$temp/newbuildsource/logos/" -maxdepth 2 -type f | wc -l)
+
 for background in "$buildsource/backgrounds/$backgroundname"* ; do
 
     backgroundname=$(basename $background)
 
     for backgroundcolor in "$buildsource/backgrounds/$backgroundname/$backgroundcolorname"*.png ; do
 
+        currentlogo=""
         backgroundcolorname=$(basename ${backgroundcolor%.*})
 
         echo "$(date +'%H:%M:%S') -----------------------------------------------------------"
@@ -159,6 +162,9 @@ for background in "$buildsource/backgrounds/$backgroundname"* ; do
                 directory=${directory##*/}
                 for logo in "$temp/newbuildsource/logos/$directory/"*.png ; do
                     if [[ -f $logo ]]; then
+                        ((currentlogo++))
+                        echo -ne "           Converting logo: $currentlogo/$logocount"\\r
+
                         logoname=$(basename ${logo%.*})
 
                         if [[ ! -d $temp/finalpicons/picon/$directory ]]; then
