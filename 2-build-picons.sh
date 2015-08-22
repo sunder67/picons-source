@@ -29,19 +29,25 @@ else
     style=$1
 fi
 
-version="$(date +'%Y-%m-%d--%H-%M-%S')"
-timestamp="$(echo ${version//-/} | rev | cut -c 3- | rev).$(echo ${version//-/} | cut -c 13-)"
+location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+buildsource="$location/build-source"
+buildtools="$location/build-tools"
+binaries="$location/build-output/binaries-$style"
+
+if [[ -d $location/.git ]]; then
+    version="$(git rev-parse --short HEAD)"
+    timestamp="$(date --date=@$(git show -s --format=%ct $version) +'%Y%m%d%H%M.%S')"
+else
+    epoch="date +%s"
+    version="$(date --date=@$($epoch) +'%Y-%m-%d--%H-%M-%S')"
+    timestamp="$(date --date=@$($epoch) +'%Y%m%d%H%M.%S')"
+fi
 
 if [[ -d /dev/shm ]] && [[ ! -f /.dockerinit ]]; then
     temp="/dev/shm/picons-tmp"
 else
     temp="/tmp/picons-tmp"
 fi
-
-location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-buildsource="$location/build-source"
-buildtools="$location/build-tools"
-binaries="$location/build-output/binaries-$style"
 
 if [[ $style = "srp" ]] || [[ $style = "snp" ]]; then
     for file in "$location/build-output/servicelist-"*"-$style" ; do
