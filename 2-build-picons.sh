@@ -1,5 +1,8 @@
 #!/bin/bash
 
+########################################################
+## Search for required commands and exit if not found ##
+########################################################
 commands=( convert pngquant rsvg-convert ar tar xz sed grep tr column cat sort find echo mkdir chmod rm cp mv ln pwd )
 
 for i in "${commands[@]}"; do
@@ -17,6 +20,9 @@ if [[ ! -z $missingcommands ]]; then
     exit
 fi
 
+##############################################
+## Ask the user whether to build SNP or SRP ##
+##############################################
 if [[ -z $1 ]]; then
     echo "Which style are you going to build?"
     select choice in "Service Reference" "Service Name"; do
@@ -29,20 +35,13 @@ else
     style=$1
 fi
 
+############################
+## Setup folder locations ##
+############################
 location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 buildsource="$location/build-source"
 buildtools="$location/build-tools"
 binaries="$location/build-output/binaries-$style"
-
-if [[ -d $location/.git ]] && which git &> /dev/null; then
-    hash="$(git rev-parse --short HEAD)"
-    version="$(date --date=@$(git show -s --format=%ct $hash) +'%Y-%m-%d--%H-%M-%S')"
-    timestamp="$(date --date=@$(git show -s --format=%ct $hash) +'%Y%m%d%H%M.%S')"
-else
-    epoch="date +%s"
-    version="$(date --date=@$($epoch) +'%Y-%m-%d--%H-%M-%S')"
-    timestamp="$(date --date=@$($epoch) +'%Y%m%d%H%M.%S')"
-fi
 
 if [[ -d /dev/shm ]] && [[ ! -f /.dockerinit ]]; then
     temp="/dev/shm/picons-tmp"
@@ -50,6 +49,9 @@ else
     temp="/tmp/picons-tmp"
 fi
 
+#############################################
+## Check if previously chosen style exists ##
+#############################################
 if [[ $style = "srp" ]] || [[ $style = "snp" ]]; then
     for file in "$location/build-output/servicelist-"*"-$style" ; do
         if [[ ! -f $file ]]; then
@@ -62,6 +64,9 @@ else
     echo "You are using an unsupported style! Keep it tidy!"
 fi
 
+###########################################################
+## Ask the user which resolution and background to build ##
+###########################################################
 if [[ -z $2 ]]; then
     for background in "$buildsource/backgrounds/"* ; do
         backgroundname=$(basename $background)
@@ -114,15 +119,34 @@ else
     fi
 fi
 
+######################################################
+## Cleanup previously created folders and re-create ##
+######################################################
 if [[ -d $temp ]]; then rm -rf "$temp"; fi
 mkdir "$temp"
 
 if [[ -d $binaries ]]; then rm -rf "$binaries"; fi
 mkdir "$binaries"
 
-chmod -R 755 "$buildtools/"*.sh
+##############################
+## Determine version number ##
+##############################
+if [[ -d $location/.git ]] && which git &> /dev/null; then
+    hash="$(git rev-parse --short HEAD)"
+    version="$(date --date=@$(git show -s --format=%ct $hash) +'%Y-%m-%d--%H-%M-%S')"
+    timestamp="$(date --date=@$(git show -s --format=%ct $hash) +'%Y%m%d%H%M.%S')"
+else
+    epoch="date +%s"
+    version="$(date --date=@$($epoch) +'%Y-%m-%d--%H-%M-%S')"
+    timestamp="$(date --date=@$($epoch) +'%Y%m%d%H%M.%S')"
+fi
 
 echo "$(date +'%H:%M:%S') - Version: $version"
+
+#############################################
+## Some basic checking of the source files ##
+#############################################
+chmod -R 755 "$buildtools/"*.sh
 
 echo "$(date +'%H:%M:%S') - Checking index"
 "$buildtools/check-index.sh" "$buildsource" "srp"
@@ -132,6 +156,9 @@ echo "$(date +'%H:%M:%S') - Checking logos"
 "$buildtools/check-logos.sh" "$buildsource/tv"
 "$buildtools/check-logos.sh" "$buildsource/radio"
 
+#############################################################
+## Create symlinks, copy required logos and convert to png ##
+#############################################################
 echo "$(date +'%H:%M:%S') - Creating symlinks and copying logos"
 "$buildtools/create-symlinks+copy-logos.sh" "$location/build-output/servicelist-" "$temp/newbuildsource" "$buildsource" "$style"
 
@@ -141,6 +168,9 @@ for file in $(find "$temp/newbuildsource/logos" -type f -name '*.svg'); do
     rm "$file"
 done
 
+####################################################################
+## Start the actual conversion to picons and creation of packages ##
+####################################################################
 logocount=$(find "$temp/newbuildsource/logos/" -maxdepth 2 -type f | wc -l)
 
 for background in "$buildsource/backgrounds/$backgroundname"* ; do
@@ -256,10 +286,16 @@ for background in "$buildsource/backgrounds/$backgroundname"* ; do
     backgroundcolorname=""
 done
 
+################################################################################
+## Cleanup temporary files and let the user know the location of the packages ##
+################################################################################
 if [[ -d $temp ]]; then rm -rf "$temp"; fi
 
 echo -e "\nThe binary packages are located in:\n$binaries\n"
 
+##########################
+## Ask the user to exit ##
+##########################
 if [[ -z $1 ]]; then
     read -p "Press any key to exit..." -n1 -s
 fi

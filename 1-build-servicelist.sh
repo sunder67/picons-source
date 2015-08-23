@@ -1,5 +1,8 @@
 #!/bin/bash
 
+########################################################
+## Search for required commands and exit if not found ##
+########################################################
 commands=( sed grep column cat sort find echo rm wc iconv awk printf pwd )
 
 for i in "${commands[@]}"; do
@@ -13,6 +16,9 @@ if [[ ! -z $missingcommands ]]; then
     exit
 fi
 
+##############################################
+## Ask the user whether to build SNP or SRP ##
+##############################################
 if [[ -z $1 ]]; then
     echo "Which style are you going to build?"
     select choice in "Service Reference" "Service Name"; do
@@ -25,6 +31,9 @@ else
     style=$1
 fi
 
+#####################################
+## Setup file and folder locations ##
+#####################################
 location=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 index=$(<"$location/build-source/$style-index")
 
@@ -34,7 +43,9 @@ else
     temp="/tmp"
 fi
 
-#Enigma2
+##################################
+## Enigma2 servicelist creation ##
+##################################
 if [[ -d $location/build-input/enigma2 ]]; then
     file="$location/build-output/servicelist-enigma2-$style"
     tempfile="$temp/$(echo $RANDOM)"
@@ -71,7 +82,9 @@ else
     echo "Enigma2: $location/build-input/enigma2 not found"
 fi
 
-#TvHeadend
+####################################
+## TvHeadend servicelist creation ##
+####################################
 if [[ -d $location/build-input/tvheadend ]]; then
     file="$location/build-output/servicelist-tvheadend-$style"
     tempfile="$temp/$(echo $RANDOM)"
@@ -108,7 +121,9 @@ else
     echo "TvHeadend: $location/build-input/tvheadend not found"
 fi
 
-#VDR
+##############################
+## VDR servicelist creation ##
+##############################
 if [[ -f $location/build-input/channels.conf ]]; then
     file="$location/build-output/servicelist-vdr-$style"
     tempfile="$temp/$(echo $RANDOM)"
@@ -165,6 +180,9 @@ else
     echo "VDR: $location/build-input/channels.conf not found"
 fi
 
+##########################
+## Ask the user to exit ##
+##########################
 if [[ -z $1 ]]; then
     read -p "Press any key to exit..." -n1 -s
 fi
