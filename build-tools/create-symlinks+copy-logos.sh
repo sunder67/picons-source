@@ -13,6 +13,9 @@ mkdir -p "$build_location/symlinks"
 
 cd "$build_location/symlinks"
 
+####################################################################
+## Create symlinks and copy logos for SNP & SRP using servicelist ##
+####################################################################
 if [[ $style = "snp" ]] || [[ $style = "srp" ]]; then
     cat "$serviceref_list"*"$style" | tr -d [:blank:] | tr -d [=*=] | while read line ; do
         IFS="|"
@@ -52,6 +55,9 @@ if [[ $style = "snp" ]] || [[ $style = "srp" ]]; then
     done
 fi
 
+#########################################################
+## Create symlinks and copy logos using only snp-index ##
+#########################################################
 if [[ $style = "dirtysnp" ]]; then
     sed '1!G;h;$!d' "$source_location/snp-index" | while read line ; do
         IFS="="
@@ -78,6 +84,9 @@ if [[ $style = "dirtysnp" ]]; then
     done
 fi
 
+#########################################################
+## Create symlinks and copy logos using only srp-index ##
+#########################################################
 if [[ $style = "dirtysrp" ]]; then
     sed '1!G;h;$!d' "$source_location/srp-index" | while read line ; do
         IFS="="
