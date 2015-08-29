@@ -258,11 +258,11 @@ for background in "$buildsource/backgrounds/$backgroundname"* ; do
 				Version: $version
 				Section: base
 				Architecture: all
-				Maintainer: http://picons.github.io
+				Maintainer: https://picons.xyz
 				Source: https://github.com/picons/picons-source
 				Description: $style.$backgroundname.$backgroundcolorname
 				OE: enigma2-plugin-picons-$style.$backgroundname.$backgroundcolorname
-				HomePage: http://picons.github.io
+				HomePage: https://picons.xyz
 				License: unknown
 				Priority: optional
 			EOF
