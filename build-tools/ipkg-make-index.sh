@@ -13,7 +13,7 @@ touch $pkg_dir/Packages
 
 for pkg in $(find $pkg_dir -name '*.ipk' | sort); do
     echo "Generating index for package $pkg" >&2
-    file_size=$(ls -l $pkg | awk '{print $5}')
+    file_size=$(ls -l --dereference $pkg | awk '{print $5}')
     md5sum=$(md5sum $pkg | awk '{print $1}')
     pkg_name=$(basename $pkg)
     ar p $pkg control.tar.gz | tar -xzOf- './control' | sed -e "s/^Description:/Filename: $pkg_name\\
