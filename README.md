@@ -33,7 +33,9 @@ TIP: If you know what you are doing, you can also use some of the following comm
 ./1-build-servicelist.sh srp
 ./1-build-servicelist.sh snp
 ./2-build-picons.sh dirtysrp
+./2-build-picons.sh dirtysrp all
 ./2-build-picons.sh dirtysnp
+./2-build-picons.sh dirtysnp all
 ./2-build-picons.sh snp
 ./2-build-picons.sh srp
 ./2-build-picons.sh snp all
