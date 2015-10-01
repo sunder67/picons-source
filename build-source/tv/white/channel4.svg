@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="801.99" width="600" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
- <metadata>
-  <rdf:RDF>
-   <cc:Work rdf:about="">
-    <dc:format>image/svg+xml</dc:format>
-    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:title/>
-   </cc:Work>
-  </rdf:RDF>
- </metadata>
- <g transform="translate(144.04764,67.235882)" fill="#FFF">
-  <path fill-rule="nonzero" d="m204.19-67.236-14.708,18.816,0,47.635l-23.11-18.032-69.332,88.779v47.635l-23.111-18.032-199.91,255.83,29.571,23.144h-47.635v69.336l65.008,50.77v-69.367h310.47v69.367h-134.38v134.06l-23.111-18.032h-69.4v69.367l65.008,50.709v-69.336h69.4v51.336l23.111,18v-213.03h69.367v195.02l23.111,18v-69.336h155.23l-65.04-50.74h-20.855v27.628h-69.336v-488.79l69.336-90.849-17.687-13.798-51.649,66.106v-112.64l14.708-18.816-65.04-50.74zm-42.146,187.91,69.367-88.748,0,374.24-69.367,0,0-285.5zm-23.111,29.635,0,112.61-41.896,53.625,0,38.855,29.604,23.144-78.054,0-21.576,27.628-87.996,0,199.91-255.87z"/>
-  <path fill-rule="evenodd" d="m323.87,480.44,23.111,18.095,0-69.4,108.97,0-65.008-50.74-67.078,0,0,102.04z"/>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="827.87" width="600" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 158.75 219.03952">
+ <g transform="translate(93.233 -126.05)">
+  <path fill="#fff" d="m-23.375 243.47h17.78v-100.06l-17.78 21.96zm46.991-89.72-17.78 21.96v140.16h17.78zm11.42 118.94h30.481v-17.78h-30.481zm-26.57-146.64-2.6301 3.24v28.26l16.44-20.31zm-43.279 81.7v-28.27l-51.826 64h22.88zm11.438 137.34h17.78v-60.96h-17.78zm-69.858-72.39h87.638v-17.78h-87.638zm99.069 72.39h44.461v-17.78h-44.461zm-58.432-17.78h17.783v17.78h-17.783z"/>
  </g>
 </svg>
